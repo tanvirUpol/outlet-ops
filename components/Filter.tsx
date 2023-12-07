@@ -1,0 +1,58 @@
+"use client"
+import { useState, useEffect, useRef } from 'react';
+import { BsFilterLeft } from 'react-icons/bs';
+
+const Filter = () => {
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const filterRef = useRef<any>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event:any) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        closeFilter();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const toggleFilter = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
+
+  const closeFilter = () => {
+    setIsFilterVisible(false);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        className="flex gap-2 justify-center items-center px-3 py-1 text-sm  shadow border border-gray-100 my-4 rounded-md w-fit transition-all duration-300 ease-in-out transform hover:scale-105"
+        onClick={toggleFilter}
+      >
+        <BsFilterLeft className="w-6 h-6" />
+        <span>Filter</span>
+      </button>
+
+      {isFilterVisible && (
+        <div className="filter-overlay fixed inset-0 bg-black opacity-40 z-10" onClick={closeFilter}></div>
+      )}
+
+      <div
+        ref={filterRef}
+        className={`filter-bar fixed top-0 right-0 w-60 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+          isFilterVisible ? 'translate-x-0' : 'translate-x-full'
+        } z-20`}
+      >
+        {/* Your filter content goes here */}
+        <p className="p-4 h-screen">This is my filter content</p>
+      </div>
+    </div>
+  );
+};
+
+export default Filter;
