@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import * as XLSX from 'xlsx';
-import { PiWarningCircleLight } from "react-icons/pi";
 import Image from 'next/image'
 import {
     Select,
@@ -13,18 +12,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import ErrorText from './ErrorText';
 
 
 const ExcelUploader = () => {
     interface formFormat {
         selectedFileFormat: string | null;
         selectedHeaders: string[];
+        selectedPath: string ;
       }
     const [loading, setLoading] = useState<boolean>(false);
     const [fileName, setFileName] = useState<string>('');
     const [selectedOpt, setSelectedOpt] = useState<formFormat>({
         selectedFileFormat: null,
         selectedHeaders: [],
+        selectedPath: "",
       });
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState<string>("")
@@ -33,12 +35,13 @@ const ExcelUploader = () => {
         {
             name: "Key Store",
             headers: ["outlet_code", "outlet_status", "outlet_name", "outlet_format", "outlet_division", "outlet_zone"],
+            api_path: "api/keyStore"
 
         },
         {
             name: "Key Article",
             headers: ["outlet_code", "outlet_format", "outleeewewet_division", "outlet_zone"],
-
+            api_path: "api/sdsdsd"
         }
     ]
 
@@ -50,13 +53,19 @@ const ExcelUploader = () => {
     }
 
     const handleFileChange = async (e: any) => {
-        console.log(selectedOpt.selectedFileFormat);
+        // console.log(selectedOpt.selectedFileFormat);
+        
         if(!selectedOpt.selectedFileFormat){
             setError("Please Select a file type first")
+            const file: any = document.querySelector(".file");
+            file.value = "";
+            setData([]);
             return null
         }else{
             setError("")
             const file = e.target.files[0];
+
+            
     
             if (file) {
                 setLoading(true);
@@ -105,6 +114,9 @@ const ExcelUploader = () => {
                 } catch (error) {
                     console.error('Error reading the Excel file:', error);
                     setLoading(false);
+                    const file: any = document.querySelector(".file");
+                    file.value = "";
+                    setData([]);
                 }
             }
         }
@@ -123,11 +135,15 @@ const ExcelUploader = () => {
 
     const handleFileFormatChange = (selectedFormat: string) => {
         const selectedFormatObject = FileFormat.find(format => format.name === selectedFormat);
-    
+        setError("")
+        const file: any = document.querySelector(".file");
+        file.value = "";
+        setData([]);
         if (selectedFormatObject) {
           setSelectedOpt({
             selectedFileFormat: selectedFormat,
             selectedHeaders: selectedFormatObject.headers,
+            selectedPath: selectedFormatObject.api_path,
           });
         }
       }
@@ -135,40 +151,40 @@ const ExcelUploader = () => {
     const handleFileSubmit = async () => {
 
         if (data.length > 0) {
-            // console.log(data);
+            console.log(data);
             setLoading(true)
 
-            // try {
-            //     const res = await fetch("/api/uploadOutlets", {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-type": "application/json"
-            //         },
-            //         body: JSON.stringify(data)
-            //     })
+            try {
+                const res = await fetch(selectedOpt.selectedPath, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
 
-            //     const json = await res.json()
-            //     console.log(json);
+                const json = await res.json()
+                console.log(json);
 
-            //     if (res.ok) {
-            //         console.log("submitted!");
-            //         toast.success('Successfully submitted!')
-            //         setData([])
-            //         setLoading(false)
+                if (res.ok) {
+                    console.log("submitted!");
+                    toast.success('Successfully submitted!')
+                    setData([])
+                    setLoading(false)
 
-            //     } else {
-            //         console.log("submission failed");
-            //         toast.error('File Did not submit!')
-            //         setLoading(false)
-            //         setData([])
-            //         //   setError(json.message)
-            //     }
+                } else {
+                    console.log("submission failed");
+                    toast.error('File Did not submit!')
+                    setLoading(false)
+                    setData([])
+                    //   setError(json.message)
+                }
 
-            // } catch (error) {
-            //     console.log("registration failed with:", error);
-            //     setLoading(false)
+            } catch (error) {
+                console.log("registration failed with:", error);
+                setLoading(false)
 
-            // }
+            }
 
             console.log(data);
         }
@@ -273,12 +289,7 @@ const ExcelUploader = () => {
 
             {
                 error &&
-                <div className='w-full flex justify-start items-center p-6 gap-3 text-xs md:text-base bg-red-500/10 rounded-md  text-rose-600 font-medium border border-dashed border-red-500'>
-                    <PiWarningCircleLight className="w-6 h-6" />
-                   <span>
-                        {error}
-                    </span>
-                </div>
+                <ErrorText error={error} />
             }
 
             <Toaster

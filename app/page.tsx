@@ -22,7 +22,7 @@ export default function Home() {
             <Filter />
           </div>
         </div>
-        <div className="grid grid-cols-2 min-[520px]:grid-cols-2 md:grid-cols-4 w-full gap-3 " >
+        <div className="grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-4 w-full gap-3 " >
           <GrowthCard title="SALES" mainData={211232111} diff={32220} path="/" percentage={33}  />
           <GrowthCard title="POS GPV" mainData={211111} diff={500} path="/" percentage={33}  />
           <GrowthCard title="Sales" mainData={2114311} diff={500} path="/" percentage={33}  />

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 
 interface Props { 
     title:string, 
@@ -14,8 +15,10 @@ const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path }
     return (
         <Link
         href={path}
-        className="mx-1 block w-full rounded-lg border border-gray-200 bg-white p-5 shadow hover:bg-gray-100"
+        className="mx-1 flex justify-between items-center  w-full rounded-lg border border-gray-200 bg-white p-5 shadow hover:bg-gray-100"
       >
+        <div>
+
         <h5 className="mb-1 text-xs font-bold tracking-tight text-gray-600 lg:text-base">
           {title}
         </h5>
@@ -31,6 +34,22 @@ const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path }
             <p>{numFor.format(diff)}</p>|<p>{percentage}</p> <span>%</span>
           </span>
         }
+        </div>
+        <div className="text-xs sm:text-sm space-y-4">
+          <div className="flex justify-center items-center text-green-500">
+           <FaLongArrowAltUp />
+            <span>
+              321
+            </span>
+          </div>
+          <div className="flex justify-center items-center text-rose-500">
+           <FaLongArrowAltDown />
+            <span>
+              124
+            </span>
+          </div>
+      
+        </div>
       </Link>
     )
 }
