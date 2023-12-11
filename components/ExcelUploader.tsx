@@ -39,9 +39,9 @@ const ExcelUploader = () => {
 
         },
         {
-            name: "Key Article",
-            headers: ["outlet_code", "outlet_format", "outleeewewet_division", "outlet_zone"],
-            api_path: "api/sdsdsd"
+            name: "Store Level",
+            headers:["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            api_path: "api/storeLevel"
         }
     ]
 
@@ -81,6 +81,16 @@ const ExcelUploader = () => {
                             const sheet = workbook.Sheets[sheetName];
                             let jsonData: any[] = XLSX.utils.sheet_to_json(sheet, {
                                 defval: 'not available', // Set default value for empty cells
+                            });
+
+
+                            // Convert all values to string
+                            jsonData = jsonData.map((row) => {
+                                const stringRow: { [key: string]: string } = {};
+                                Object.keys(row).forEach((key) => {
+                                    stringRow[key.toLowerCase()] = row[key].toString();
+                                });
+                                return stringRow;
                             });
     
                             // Convert headers to lowercase

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
-
+import { IoMdArrowDropup } from "react-icons/io";
+import { IoMdArrowDropdown } from "react-icons/io";
 interface Props { 
     title:string, 
     mainData:number, 
@@ -36,14 +37,14 @@ const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path }
         }
         </div>
         <div className="text-xs sm:text-sm space-y-4">
-          <div className="flex justify-center items-center text-green-500">
-           <FaLongArrowAltUp />
+          <div className="flex justify-center gap-1 items-center text-green-500">
+           <IoMdArrowDropup className="w-5 h-5" />
             <span>
               321
             </span>
           </div>
-          <div className="flex justify-center items-center text-rose-500">
-           <FaLongArrowAltDown />
+          <div className="flex justify-center gap-1 items-center text-rose-500">
+           <IoMdArrowDropdown className="w-5 h-5" />
             <span>
               124
             </span>

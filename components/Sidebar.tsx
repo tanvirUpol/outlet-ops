@@ -46,7 +46,7 @@ const Sidebar = () => {
 
 
     return (
-        <div className={` ${isCollapsed ? 'sticky' : 'fixed sm:sticky'} top-0 left-0 flex h-[100dvh] text-sm ${isCollapsed ? 'w-20' : 'w-64'} bg-gray-800  z-40 text-white transition-all duration-200 p-2 md:p-4`}>
+        <div className={` ${isCollapsed ? 'sticky' : 'fixed sm:sticky'} top-0 left-0 bottom-0 flex h-[100dvh] text-sm ${isCollapsed ? 'w-20' : 'w-64'} bg-gray-800  z-40 text-white transition-all duration-200 p-2 md:p-4`}>
             <div className={`flex-1 flex flex-col ${isCollapsed ? 'items-center' : 'items-start'} overflow-hidden `}>
                 {/* head button */}
                 <div className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-between'} mt-4  mb-24 w-full`}>
