@@ -6,7 +6,7 @@ import keyStoreModel from "@/models/keyStoreModel";
 export async function POST(req: Request) {
     try {
         const data = await req.json();
-        console.log(data);
+        // console.log(data);
         // console.log(data);
         await connectMongoDB();
         await keyStoreModel.deleteMany({})

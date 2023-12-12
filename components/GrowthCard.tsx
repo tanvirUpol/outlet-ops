@@ -1,58 +1,62 @@
 import Link from "next/link"
-import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
-interface Props { 
-    title:string, 
-    mainData:number, 
-    diff:number, 
-    percentage:number, 
-    path:string 
+import { IoStorefrontSharp } from "react-icons/io5";
+import { IoStorefront } from "react-icons/io5";
+interface Props {
+  title: string,
+  mainData: number,
+  diff: number,
+  percentage: number,
+  path: string,
+  growthCount: number,
+  deGrowthCount: number
 }
 
-const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path }) => {
-    const numFor = Intl.NumberFormat("en-US");
+const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path, growthCount, deGrowthCount }) => {
+  const numFor = Intl.NumberFormat("en-US");
 
-    return (
-        <Link
-        href={path}
-        className="mx-1 flex justify-between items-center  w-full rounded-lg border border-gray-200 bg-white p-5 shadow hover:bg-gray-100"
-      >
-        <div>
-
+  return (
+    <Link
+      href={path}
+      className="w-full rounded-lg border border-gray-200 bg-white p-4 lg:p-5 shadow hover:bg-gray-100"
+    >
+      
         <h5 className="mb-1 text-xs font-bold tracking-tight text-gray-600 lg:text-base">
           {title}
         </h5>
-        <p className={`mb-1 text-base font-semibold text-gray-950 lg:text-xl`}>
-          {numFor.format(Math.round(mainData))}
-        </p>
-        {
-          <span
-            className={`flex gap-1 text-xs font-semibold ${
-              diff < 0 ? "text-rose-500" : "text-green-600"
-            }`}
-          >
-            <p>{numFor.format(diff)}</p>|<p>{percentage}</p> <span>%</span>
-          </span>
-        }
+        <div className="flex justify-between items-end w-full">
+          <div className="stats">
+            <p className={`mt-2 mb-1 text-sm font-semibold text-gray-950 lg:text-xl`}>
+              {numFor.format(Math.round(mainData))}
+            </p>
+            <span
+              className={`flex gap-1 text-xs font-medium ${diff < 0 ? "text-rose-500" : "text-green-600"
+                }`}
+            >
+              <p>{numFor.format(Math.round(diff))}</p>|<p>{percentage.toFixed(2)}</p> <span>%</span>
+            </span>
+          </div>
+          <div className="text-xs xl:text-sm flex flex-col xl:flex-row items-start justify-center font-medium gap-2 xl:gap-4">
+            <div className="flex justify-start gap-1 items-center text-teal-500">
+              <IoStorefront className="" />
+              <span>
+                {growthCount}
+              </span>
+            </div>
+            <div className="flex justify-center gap-1 items-center text-rose-600">
+              <IoStorefront className="" />
+              <span>
+                {deGrowthCount}
+              </span>
+            </div>
+
+          </div>
         </div>
-        <div className="text-xs sm:text-sm space-y-4">
-          <div className="flex justify-center gap-1 items-center text-green-500">
-           <IoMdArrowDropup className="w-5 h-5" />
-            <span>
-              321
-            </span>
-          </div>
-          <div className="flex justify-center gap-1 items-center text-rose-500">
-           <IoMdArrowDropdown className="w-5 h-5" />
-            <span>
-              124
-            </span>
-          </div>
       
-        </div>
-      </Link>
-    )
+
+    </Link>
+  )
 }
 
 export default GrowthCard
