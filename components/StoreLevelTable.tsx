@@ -42,7 +42,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
         </SelectContent>
       </Select>
       <div className="mb-4   rounded auto overflow-scroll h-[80dvh] shadow   relative " >
-        <table className=" table-fixed w-[500px] md:w-full shadow-sm rounded ">
+        <table className=" table-fixed w-[768px] md:w-full shadow-sm rounded ">
           <thead className="sticky top-0" >
             <tr className="bg-slate-800" >
               {/* <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"> Code</th> */}
