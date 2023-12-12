@@ -22,7 +22,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
   const [type, setType] = useState("sales")
 
   return (
-    <div className="my-4 flex flex-col items-end">
+    <div className="my-4 flex flex-col items">
       <Select value={type} onValueChange={(e) => setType(e)} >
         <SelectTrigger className="w-[150px] md:w-[180px] mb-2" >
           <SelectValue placeholder="Select a File" />
@@ -42,7 +42,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
         </SelectContent>
       </Select>
       <div className="mb-4 w-full rounded overflow-scroll h-[80dvh] shadow   relative no-scrollbar" >
-        <table className="w-full table-fixed  shadow-sm rounded ">
+        <table className=" table-fixed  shadow-sm rounded ">
           <thead className="sticky top-0" >
             <tr className="bg-slate-800" >
               {/* <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"> Code</th> */}
