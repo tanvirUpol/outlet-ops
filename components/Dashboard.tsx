@@ -1,5 +1,3 @@
-"use client"
-
 import Download from "@/components/Download";
 import Filter from "@/components/Filter";
 import GrowthCard from "@/components/GrowthCard";

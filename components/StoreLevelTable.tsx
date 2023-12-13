@@ -20,6 +20,35 @@ interface Props {
 const StoreLevelTable: React.FC<Props> = ({ data }) => {
 
   const [type, setType] = useState("sales")
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortBy, setSortBy] = useState("desc");
+
+
+  const toggleSort = (column: string) => {
+    console.log(column);
+    if (column === sortBy) {
+      // If the same column is clicked, toggle the sorting direction
+      console.log(column);
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // If a new column is clicked, set it as the sorting column and default to ascending order
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedOutlets = (data)
+    ?.slice().sort((a, b) => {
+      const aValue = parseFloat(a[sortBy]);
+      const bValue = parseFloat(b[sortBy]);
+      if (sortOrder === "asc") {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
+    });
+
+
 
   return (
     <div className="my-4 flex flex-col items-stretch">
@@ -47,14 +76,17 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
             <tr className="bg-slate-800" >
               {/* <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"> Code</th> */}
               <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Outlet Name</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">{type} This</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">{type} Last</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">{type} Growth</th>
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_this")}>{type} This {sortBy === `${type}_this` &&
+                (sortOrder === "asc" ? "▲" : " ▼")}</th>
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_last")}>{type} Last {sortBy === `${type}_last` &&
+                (sortOrder === "asc" ? "▲" : " ▼")}</th>
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_growth")} >{type} Growth {sortBy === `${type}_growth`&&
+                (sortOrder === "asc" ? "▲" : " ▼")} </th>
               {/* Add more headers based on your data */}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white" >
-            {data.map((item) => (
+            {sortedOutlets.map((item) => (
               <tr className="cursor-pointer  text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
                 {/* <td className="py-2 px-4 border-b">{item.outlet_code}</td> */}
                 <td className="py-3 px-4 border-b max-w-[100px]">{item.outlet_name}</td>
