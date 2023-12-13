@@ -34,7 +34,8 @@ async function getData(id:string) {
 
 
 const page   = async ({ params }: { params: { id: string } }) => {
-    const outletData = await getData(params.id)
+    const { id } = params
+    const outletData = await getData(id)
 
     // console.log(outletData);
 
