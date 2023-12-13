@@ -14,6 +14,8 @@ interface Props {
 
 const Dashboard: React.FC<Props> = ({ data }) => {
 
+  // console.log(catData);
+
   const updatedData = data?.map(item => ({
     ...item,
     sales_growth: calculateNormalPercentage(item.sales_this, item.sales_last),

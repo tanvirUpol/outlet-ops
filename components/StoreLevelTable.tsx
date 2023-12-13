@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useState } from "react"
+import Link from "next/link"
 
 interface Props {
   data: Array<any>
@@ -89,7 +90,11 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
             {sortedOutlets.map((item) => (
               <tr className="cursor-pointer  text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
                 {/* <td className="py-2 px-4 border-b">{item.outlet_code}</td> */}
-                <td className="py-3 px-4 border-b max-w-[100px]">{item.outlet_name}</td>
+                <td className="py-3 px-4 border-b max-w-[100px]">
+                  <Link href={`/outlet/${item.outlet_code}`}>
+                    {item.outlet_name}
+                  </Link>
+                </td>
                 <td className="py-3 px-4 border-b">{numFor.format((parseFloat(item[type + "_this"])))}</td>
                 <td className="py-3 px-4 border-b">{numFor.format(parseFloat(item[type + "_last"]))}</td>
                 <td className={`py-3 px-4 border-b ${(item[type + "_growth"] >= 0) ? "text-teal-500" : "text-rose-600"}`}>  {(item.sales_growth > 0) && <span>+</span>}

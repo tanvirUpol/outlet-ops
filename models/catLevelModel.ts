@@ -11,11 +11,7 @@ const catLevelSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  format: {
-    type: String,
-    required: true
-  },
-  zonal_head: {
+  zonal: {
     type: String,
     required: true
   },
@@ -55,11 +51,11 @@ const catLevelSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  pos_gpv_this: {
+  gpv_this: {
     type: String,
     required: true
   },
-  pos_gpv_last: {
+  gpv_last: {
     type: String,
     required: true
   },
@@ -75,7 +71,7 @@ const catLevelSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  format_pos_gpv_gr: {
+  format_gpv_gr: {
     type: String,
     required: true
   },
@@ -91,4 +87,4 @@ const catLevelSchema = new mongoose.Schema({
 
 const catLevelModel = models.catLevel || mongoose.model('catLevel', catLevelSchema);
 
-module.exports = catLevelModel;
+export default catLevelModel

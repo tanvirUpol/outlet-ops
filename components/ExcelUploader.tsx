@@ -42,6 +42,11 @@ const ExcelUploader = () => {
             name: "Store Level",
             headers:["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
+        },
+        {
+            name: "Category Level",
+            headers:["outlet_code", "outlet_name", "zonal", "master_category", "cat_1", "cat_3", "ff_this", "ff_last","sales_this", "sales_last", "format_sales_gr", "bs_this", "bs_last", "gpv_this", "gpv_last",  "month", "day", "format_bs_gr", "format_ff_gr", "format_gpv_gr" ],
+            api_path: "api/catLevel"
         }
     ]
 
@@ -49,7 +54,7 @@ const ExcelUploader = () => {
 
     const checkFormat = (actual_format: string[], given_format: string[]) => {
         // console.log(actual_format, given_format);
-        return actual_format.every(item => given_format.includes(item));
+        return actual_format.every(item => given_format.includes(item.toLowerCase()));
     }
 
     const handleFileChange = async (e: any) => {
@@ -98,15 +103,24 @@ const ExcelUploader = () => {
                                 jsonData = jsonData.map((row) => {
                                     const lowerCaseRow: { [key: string]: any } = {};
                                     Object.keys(row).forEach((key) => {
-                                        lowerCaseRow[key.toLowerCase()] = row[key];
+                                        lowerCaseRow[key.toLowerCase().trim()] = row[key];
                                     });
                                     return lowerCaseRow;
                                 });
                             }
     
                             // console.log(Object.keys(jsonData[0]));
-    
-                            if (!checkFormat(selectedOpt.selectedHeaders, Object.keys(jsonData[0]))) {
+
+                            const firstObject = jsonData[0];
+
+                            const lowercaseKeys: { [key: string]: any } = Object.keys(firstObject).reduce((acc:any, key) => {
+                            acc[key.toLowerCase()] = firstObject[key];
+                            return acc;
+                            }, {});
+
+                            console.log(Object.keys(lowercaseKeys));
+                                
+                            if (!checkFormat(selectedOpt.selectedHeaders, Object.keys(lowercaseKeys))) {
                                 setError("File headers not correct. Please use the example table")
                                 throw new Error
                             }
@@ -115,6 +129,10 @@ const ExcelUploader = () => {
                             setFileName(file.name);
                         } catch (error) {
                             console.error('Error reading the Excel file:', error);
+                            setLoading(false);
+                            const file: any = document.querySelector(".file");
+                            file.value = "";
+                            setData([]);
                         } finally {
                             setLoading(false);
                         }
@@ -203,8 +221,6 @@ const ExcelUploader = () => {
         }
     }
 
-
-    console.log(loading);
 
 
     return (

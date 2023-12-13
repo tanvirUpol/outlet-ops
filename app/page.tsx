@@ -2,7 +2,6 @@ import Dashboard from "@/components/Dashboard";
 
 
 async function getStoreLevelData() {
-  // await new Promise(resolve => setTimeout(resolve,3000))
   const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel",{
       next: {
           revalidate: 60
@@ -13,14 +12,17 @@ async function getStoreLevelData() {
 
 }
 
+
  
 export default async function Home() {
 
   const data = await getStoreLevelData()
 
-  // console.log(data);
+
+  // console.log(data[0]);
+ 
 
   return (
-    <Dashboard data={data} />
+    <Dashboard data={data}  />
   )
 }
