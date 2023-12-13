@@ -1,4 +1,5 @@
 import OutletInfo from "@/components/OutletInfo";
+import { notFound } from "next/navigation";
 import { BiSolidStore } from "react-icons/bi";
 
 
@@ -6,6 +7,8 @@ export async function generateStaticParams(){
     const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel")
 
     const data = await res.json()
+
+    
 
     return data.map((item:any) =>(
         {
@@ -23,9 +26,9 @@ async function getData(id:string) {
         }
     })
 
-    // if(!res.ok){
-    //     notFound()
-    // }
+    if(!res.ok){
+        notFound()
+    }
     return res.json()
 }
 
