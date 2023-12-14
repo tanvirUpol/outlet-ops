@@ -88,10 +88,10 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white" >
             {sortedOutlets.map((item) => (
-              <tr className="cursor-pointer  text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
+              <tr className=" text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
                 {/* <td className="py-2 px-4 border-b">{item.outlet_code}</td> */}
                 <td className="py-3 px-4 border-b max-w-[100px]">
-                  <Link href={`/outlet/${item.outlet_code}`}>
+                  <Link className="cursor-pointer  underline underline-offset-2" href={`/outlet/${item.outlet_code}`}>
                     {item.outlet_name}
                   </Link>
                 </td>

@@ -47,28 +47,49 @@ const CatDataTable: React.FC<Props> = ({ masterCategoryData, cat1Data, data }) =
 
 
     const toggleSort = (column: string) => {
+        console.log(column);
         if (column === sortBy) {
             // If the same column is clicked, toggle the sorting direction
             console.log(column);
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            setSortOrder(sortOrder === "asc" ? "desc" : "asc");
         } else {
             // If a new column is clicked, set it as the sorting column and default to ascending order
             setSortBy(column);
-            setSortOrder('asc');
+            setSortOrder("asc");
         }
     };
 
-
-    const sortedOutlets = cat3DataUpdated?.slice()
-        .sort((a, b) => {
-            const aValue = a[sortBy];
-            const bValue = b[sortBy];
+    const sortedOutletsCat3 = (cat3DataUpdated)
+        ?.slice().sort((a, b) => {
+            const aValue = parseFloat(a[sortBy]);
+            const bValue = parseFloat(b[sortBy]);
             if (sortOrder === "asc") {
                 return aValue - bValue;
             } else {
                 return bValue - aValue;
             }
         });
+    const sortedOutletsCat1 = (cat1DataUpdated)
+        ?.slice().sort((a, b) => {
+            const aValue = parseFloat(a[sortBy]);
+            const bValue = parseFloat(b[sortBy]);
+            if (sortOrder === "asc") {
+                return aValue - bValue;
+            } else {
+                return bValue - aValue;
+            }
+        });
+    const sortedOutletsMaster = (masterCategoryDataUpdated)
+        ?.slice().sort((a, b) => {
+            const aValue = parseFloat(a[sortBy]);
+            const bValue = parseFloat(b[sortBy]);
+            if (sortOrder === "asc") {
+                return aValue - bValue;
+            } else {
+                return bValue - aValue;
+            }
+        });
+
 
 
     const numFor = Intl.NumberFormat("en-US");
@@ -90,175 +111,170 @@ const CatDataTable: React.FC<Props> = ({ masterCategoryData, cat1Data, data }) =
             <div className='rounded mt-5  overflow-y-hidden border'>
                 <table className=" table-fixed min-w-full shadow-sm ">
                     <thead>
-                        <tr className="bg-teal-700 text-left">
+                        <tr className="bg-slate-900 text-left">
                             <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider lg:w-[500px] text-white">
                                 Master Category
                             </th>
-                            <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                {selectedMetric} This
+                            <th onClick={() => toggleSort(selectedMetric + "_this")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                {selectedMetric} This {sortBy === `${selectedMetric}_this` && (sortOrder === "asc" ? "▲" : " ▼")}
                             </th>
-                            <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                {selectedMetric} Last
+                            <th onClick={() => toggleSort(selectedMetric + "_last")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                {selectedMetric} Last {sortBy === `${selectedMetric}_last` && (sortOrder === "asc" ? "▲" : " ▼")}
                             </th>
-                            <th  className="p-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                {selectedMetric} Growth %
+                            <th onClick={() => toggleSort(selectedMetric + "_growth")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                {selectedMetric} Growth % {sortBy === `${selectedMetric}_growth` && (sortOrder === "asc" ? "▲" : " ▼")}
                             </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                        {masterCategoryDataUpdated.map((item, index) => (
+                        {sortedOutletsMaster.map((item, index) => (
                             <React.Fragment key={index}>
-                                { item.master_category !== "44-HOME DELIVERY" && item.master_category !== "Undf# 2" && (
-                                        <>
-                                            <tr
-                                                onClick={() => toggleMaster(item.master_category)}
-                                                className="cursor-pointer text-xs transition-colors hover:bg-teal-100 sm:text-base"
-                                            >
-                                                <td className="p-3 flex items-center">
-                                                    <button
-                                                        onClick={() => toggleMaster(item.master_category)}
-                                                        className="mr-2 focus:outline-none font-medium text-base"
-                                                    >
-                                                        {expandedMaster === item.master_category ? "-" : "+" }
-                                                    </button>
-                                                    <span>
-                                                        {item.master_category}
-                                                    </span>
-                                                </td>
-                                                <td className="p-3">
-                                                    {numFor.format(item[selectedMetric + "_this"])}
-                                                </td>
-                                                <td className="p-3">
-                                                    {numFor.format(item[selectedMetric + "_last"])}
-                                                </td>
-                                                <td className={`p-3 ${item[selectedMetric + "_this"] <
-                                                                                        item[selectedMetric + "_last"] ? "text-rose-500" : "text-green-600"} font-medium`}>
+                                {item.master_category !== "44-HOME DELIVERY" && item.master_category !== "Undf# 2" && (
+                                    <>
+                                        <tr
+                                            onClick={() => toggleMaster(item.master_category)}
+                                            className="cursor-pointer text-xs transition-colors hover:bg-teal-100 sm:text-sm"
+                                        >
+                                            <td className="p-3 flex items-center">
+                                                <button
+                                                    onClick={() => toggleMaster(item.master_category)}
+                                                    className="mr-2 focus:outline-none font-medium text-sm"
+                                                >
+                                                    {expandedMaster === item.master_category ? "-" : "+"}
+                                                </button>
+                                                <span>
+                                                    {item.master_category}
+                                                </span>
+                                            </td>
+                                            <td className="p-3">
+                                                {numFor.format(item[selectedMetric + "_this"])}
+                                            </td>
+                                            <td className="p-3">
+                                                {numFor.format(item[selectedMetric + "_last"])}
+                                            </td>
+                                            <td className={`p-3 ${item[selectedMetric + "_growth"]<
+                                                0 ? "text-rose-500" : "text-green-600"} font-medium`}>
                                                 {numFor.format(item[selectedMetric + "_growth"])}%
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                {expandedMaster === item.master_category && (
-                                                    <td colSpan={4} className="py-4">
-                                                        <table className="w-full">
-                                                            <thead>
-                                                                <tr className="bg-emerald-500">
-                                                                    <th className="px-4 py-3 lg:w-[500px] text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                        CAT 1
-                                                                    </th>
-                                                                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                        {selectedMetric} This
-                                                                    </th>
-                                                                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                        {selectedMetric} Last
-                                                                    </th>
-                                                                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                        {selectedMetric} Growth %
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {cat1DataUpdated.map((item, index) => (
-                                                                    <React.Fragment key={index}>
-                                                                        {item.master_category === expandedMaster && (
-                                                                            <>
-                                                                                <tr
-                                                                                    onClick={() => toggleCat1(item.cat_1)}
-                                                                                    className="cursor-pointer text-xs transition-colors bg-emerald-50 hover:bg-green-100 sm:text-base"
-                                                                                >
-                                                                                    <td className="p-3 flex items-center">
-                                                                                        <button
-                                                                                            onClick={() => toggleCat1(item.cat_1)}
-                                                                                            className="mr-2 focus:outline-none font-medium text-base"
-                                                                                        >
-                                                                                            {expandedCat1 === item.cat_1 ? "-" : "+"}
-                                                                                        </button>
-                                                                                        <span>
-                                                                                            {item.cat_1}
-                                                                                        </span>
-                                                                                    </td>
-                                                                                    <td className="p-3">
-                                                                                        {numFor.format(item[selectedMetric + "_this"])}
-                                                                                    </td>
-                                                                                    <td className="p-3">
-                                                                                        {numFor.format(item[selectedMetric + "_last"])}
-                                                                                    </td>
-                                                                                    <td className={`p-3  ${item[selectedMetric + "_this"] <
-                                                                                        item[selectedMetric + "_last"] ? "text-rose-500" : "text-green-600"} font-medium`}>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            {expandedMaster === item.master_category && (
+                                                <td colSpan={4} className="py-4">
+                                                    <table className="w-full">
+                                                        <thead>
+                                                            <tr className="bg-slate-700">
+                                                                <th className="px-4 py-3 lg:w-[500px] text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                    CAT 1
+                                                                </th>
+                                                                <th onClick={() => toggleSort(selectedMetric + "_this")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                    {selectedMetric} This {sortBy === `${selectedMetric}_this` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                </th>
+                                                                <th onClick={() => toggleSort(selectedMetric + "_last")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                    {selectedMetric} Last {sortBy === `${selectedMetric}_last` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                </th>
+                                                                <th onClick={() => toggleSort(selectedMetric + "_growth")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                    {selectedMetric} Growth % {sortBy === `${selectedMetric}_growth` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {sortedOutletsCat1.map((item, index) => (
+                                                                <React.Fragment key={index}>
+                                                                    {item.master_category === expandedMaster && (
+                                                                        <>
+                                                                            <tr
+                                                                                onClick={() => toggleCat1(item.cat_1)}
+                                                                                className="cursor-pointer text-xs transition-colors bg-slate-50 hover:bg-slate-100 sm:text-sm"
+                                                                            >
+                                                                                <td className="p-3 flex items-center">
+                                                                                    <button
+                                                                                        onClick={() => toggleCat1(item.cat_1)}
+                                                                                        className="mr-2 focus:outline-none font-medium text-sm"
+                                                                                    >
+                                                                                        {expandedCat1 === item.cat_1 ? "-" : "+"}
+                                                                                    </button>
+                                                                                    <span>
+                                                                                        {item.cat_1}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="p-3">
+                                                                                    {numFor.format(item[selectedMetric + "_this"])}
+                                                                                </td>
+                                                                                <td className="p-3">
+                                                                                    {numFor.format(item[selectedMetric + "_last"])}
+                                                                                </td>
+                                                                                <td className={`p-3  ${item[selectedMetric + "_growth"] <
+                                                                                    0 ? "text-rose-500" : "text-green-600"} font-medium`}>
                                                                                     {numFor.format(item[selectedMetric + "_growth"])}%
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    {expandedCat1 === item.cat_1 && (
-                                                                                        <td colSpan={4} className="py-4">
-                                                                                            <table className="w-full shadow">
-                                                                                                <thead>
-                                                                                                    <tr className="bg-rose-500">
-                                                                                                        <th className="px-4 py-3 lg:w-[500px] text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                                                            CAT 3
-                                                                                                        </th>
-                                                                                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                                                            {selectedMetric} This
-                                                                                                        </th>
-                                                                                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                                                            {selectedMetric} Last
-                                                                                                        </th>
-                                                                                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                                                                                                            {selectedMetric} Growth %
-                                                                                                        </th>
-                                                                                                        {/* <th onClick={() => toggleSort("format_" + selectedMetric + "_gr")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer">
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                {expandedCat1 === item.cat_1 && (
+                                                                                    <td colSpan={4} className="py-4">
+                                                                                        <table className="w-full shadow">
+                                                                                            <thead>
+                                                                                                <tr className="bg-slate-600">
+                                                                                                    <th className="px-4 py-3 lg:w-[500px] text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                                                        CAT 3
+                                                                                                    </th>
+                                                                                                    <th onClick={() => toggleSort(selectedMetric + "_this")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                                                        {selectedMetric} This {sortBy === `${selectedMetric}_this` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                                                    </th>
+                                                                                                    <th onClick={() => toggleSort(selectedMetric + "_last")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                                                        {selectedMetric} Last {sortBy === `${selectedMetric}_last` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                                                    </th>
+                                                                                                    <th onClick={() => toggleSort(selectedMetric + "_growth")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+                                                                                                        {selectedMetric} Growth % {sortBy === `${selectedMetric}_growth` && (sortOrder === "asc" ? "▲" : " ▼")}
+                                                                                                    </th>
+                                                                                                    {/* <th onClick={() => toggleSort("format_" + selectedMetric + "_gr")} className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer">
                                                                                                             Benchmark {selectedMetric} % {sortBy === ("format_" + selectedMetric + "_gr") && (sortOrder === 'asc' ? '▲' : '▼')}
                                                                                                         </th> */}
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    {sortedOutlets.map((item, index) => (
-                                                                                                        <React.Fragment key={index}>
-                                                                                                            {item.master_category ===
-                                                                                                                expandedMaster && (
-                                                                                                                    <tr className="cursor-pointer text-xs transition-colors bg-rose-50 hover:bg-rose-100 sm:text-base">
-                                                                                                                        <td className="p-3">
-                                                                                                                            {item.cat_3}
-                                                                                                                        </td>
-                                                                                                                        <td className="p-3">
-                                                                                                                            {numFor.format((item[
-                                                                                                                                selectedMetric + "_this"
-                                                                                                                            ]))}
-                                                                                                                        </td>
-                                                                                                                        <td className="p-3">
-                                                                                                                            {numFor.format(item[
-                                                                                                                                selectedMetric + "_last"
-                                                                                                                            ])}
-                                                                                                                        </td>
-                                                                                                                        <td className={`p-3  ${item[selectedMetric + "_this"] <
-                                                                                                                            item[selectedMetric + "_last"] ? "text-rose-500" : "text-green-600"} font-medium`}>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                {sortedOutletsCat3.map((item, index) => (
+                                                                                                    <React.Fragment key={index}>
+                                                                                                        {item.master_category ===
+                                                                                                            expandedMaster && (
+                                                                                                                <tr className="cursor-pointer text-xs transition-colors bg-slate-50 hover:bg-slate-100 sm:text-sm">
+                                                                                                                    <td className="p-3">
+                                                                                                                        {item.cat_3}
+                                                                                                                    </td>
+                                                                                                                    <td className="p-3">
+                                                                                                                        {numFor.format((item[
+                                                                                                                            selectedMetric + "_this"
+                                                                                                                        ]))}
+                                                                                                                    </td>
+                                                                                                                    <td className="p-3">
+                                                                                                                        {numFor.format(item[
+                                                                                                                            selectedMetric + "_last"
+                                                                                                                        ])}
+                                                                                                                    </td>
+                                                                                                                    <td className={`p-3  ${item[selectedMetric + "_growth"] <
+                                                                                                                        0 ? "text-rose-500" : "text-green-600"} font-medium`}>
                                                                                                                         {numFor.format(item[selectedMetric + "_growth"])}%
-                                                                                                                        </td>
-                                                                                                                        {/* <td className={`p-3  ${item["format_" + selectedMetric + "_gr"] <
-                                                                                                                            0 ? "text-rose-500" : "text-green-600"} font-medium`}>
-                                                                                                                            {numFor.format(item[
-                                                                                                                                "format_" + selectedMetric + "_gr"
-                                                                                                                            ])}
-                                                                                                                        </td> */}
-                                                                                                                    </tr>
-                                                                                                                )}
-                                                                                                        </React.Fragment>
-                                                                                                    ))}
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </td>
-                                                                                    )}
-                                                                                </tr>
-                                                                            </>
-                                                                        )}
-                                                                    </React.Fragment>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        </>
-                                    )}
+                                                                                                                    </td>
+
+                                                                                                                </tr>
+                                                                                                            )}
+                                                                                                    </React.Fragment>
+                                                                                                ))}
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                )}
+                                                                            </tr>
+                                                                        </>
+                                                                    )}
+                                                                </React.Fragment>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    </>
+                                )}
                             </React.Fragment>
                         ))}
                     </tbody>

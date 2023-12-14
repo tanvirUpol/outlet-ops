@@ -13,7 +13,7 @@ export async function GET(req:Request, {params}: { params: { id:string } }) {
     const keyStoreData = await keyStoreModel.find({outlet_code: id}).lean()
     const catLevelData = await catLevelModel.find({outlet_code: id}).lean();
 
-    // console.log(catLevelData);
+    console.log(catLevelData);
 
 
 
