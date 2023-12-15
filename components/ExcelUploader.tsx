@@ -19,19 +19,19 @@ const ExcelUploader = () => {
     interface formFormat {
         selectedFileFormat: string | null;
         selectedHeaders: string[];
-        selectedPath: string ;
-      }
+        selectedPath: string;
+    }
     const [loading, setLoading] = useState<boolean>(false);
     const [fileName, setFileName] = useState<string>('');
     const [selectedOpt, setSelectedOpt] = useState<formFormat>({
         selectedFileFormat: null,
         selectedHeaders: [],
         selectedPath: "",
-      });
+    });
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState<string>("")
 
-    const FileFormat  = [
+    const FileFormat = [
         {
             name: "Key Store",
             headers: ["outlet_code", "outlet_status", "outlet_name", "outlet_format", "outlet_division", "outlet_zone"],
@@ -40,17 +40,22 @@ const ExcelUploader = () => {
         },
         {
             name: "Store Level",
-            headers:["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            headers: ["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
         },
         {
             name: "Category Level",
-            headers:["outlet_code", "outlet_name", "zonal", "master_category", "cat_1", "cat_3", "ff_this", "ff_last","sales_this", "sales_last", "format_sales_gr", "bs_this", "bs_last", "gpv_this", "gpv_last",  "month", "day", "format_bs_gr", "format_ff_gr", "format_gpv_gr" ],
+            headers: ["outlet_code", "outlet_name", "zonal", "master_category", "cat_1", "cat_3", "ff_this", "ff_last", "sales_this", "sales_last", "format_sales_gr", "bs_this", "bs_last", "gpv_this", "gpv_last", "month", "day", "format_bs_gr", "format_ff_gr", "format_gpv_gr"],
             api_path: "api/catLevel"
-        }
+        },
+        // {
+        //     name: "Bench Mark Stores",
+        //     headers: ["outlet_code", "outlet_name"],
+        //     api_path: "api/benchStores"
+        // }
     ]
 
-    
+
 
     const checkFormat = (actual_format: string[], given_format: string[]) => {
         // console.log(actual_format, given_format);
@@ -59,27 +64,27 @@ const ExcelUploader = () => {
 
     const handleFileChange = async (e: any) => {
         // console.log(selectedOpt.selectedFileFormat);
-        
-        if(!selectedOpt.selectedFileFormat){
+
+        if (!selectedOpt.selectedFileFormat) {
             setError("Please Select a file type first")
             const file: any = document.querySelector(".file");
             file.value = "";
             setData([]);
             return null
-        }else{
+        } else {
             setError("")
             const file = e.target.files[0];
 
-            
-    
+
+
             if (file) {
                 setLoading(true);
-    
+
                 try {
                     const reader = new FileReader();
                     reader.onload = async (e) => {
                         const binaryData = e.target?.result;
-    
+
                         try {
                             const workbook = XLSX.read(binaryData, { type: 'binary' });
                             const sheetName = workbook.SheetNames[0];
@@ -97,7 +102,7 @@ const ExcelUploader = () => {
                                 });
                                 return stringRow;
                             });
-    
+
                             // Convert headers to lowercase
                             if (jsonData.length > 0) {
                                 jsonData = jsonData.map((row) => {
@@ -108,23 +113,23 @@ const ExcelUploader = () => {
                                     return lowerCaseRow;
                                 });
                             }
-    
+
                             // console.log(Object.keys(jsonData[0]));
 
                             const firstObject = jsonData[0];
 
-                            const lowercaseKeys: { [key: string]: any } = Object.keys(firstObject).reduce((acc:any, key) => {
-                            acc[key.toLowerCase()] = firstObject[key];
-                            return acc;
+                            const lowercaseKeys: { [key: string]: any } = Object.keys(firstObject).reduce((acc: any, key) => {
+                                acc[key.toLowerCase()] = firstObject[key];
+                                return acc;
                             }, {});
 
                             console.log(Object.keys(lowercaseKeys));
-                                
+
                             if (!checkFormat(selectedOpt.selectedHeaders, Object.keys(lowercaseKeys))) {
                                 setError("File headers not correct. Please use the example table")
                                 throw new Error
                             }
-    
+
                             setData(jsonData);
                             setFileName(file.name);
                         } catch (error) {
@@ -137,7 +142,7 @@ const ExcelUploader = () => {
                             setLoading(false);
                         }
                     };
-    
+
                     reader.readAsBinaryString(file);
                 } catch (error) {
                     console.error('Error reading the Excel file:', error);
@@ -149,7 +154,7 @@ const ExcelUploader = () => {
             }
         }
 
-       
+
 
     };
 
@@ -158,7 +163,7 @@ const ExcelUploader = () => {
         const file: any = document.querySelector(".file");
         file.value = "";
         setData([]);
-        
+
     };
 
     const handleFileFormatChange = (selectedFormat: string) => {
@@ -168,13 +173,13 @@ const ExcelUploader = () => {
         file.value = "";
         setData([]);
         if (selectedFormatObject) {
-          setSelectedOpt({
-            selectedFileFormat: selectedFormat,
-            selectedHeaders: selectedFormatObject.headers,
-            selectedPath: selectedFormatObject.api_path,
-          });
+            setSelectedOpt({
+                selectedFileFormat: selectedFormat,
+                selectedHeaders: selectedFormatObject.headers,
+                selectedPath: selectedFormatObject.api_path,
+            });
         }
-      }
+    }
 
     const handleFileSubmit = async () => {
 
@@ -232,10 +237,10 @@ const ExcelUploader = () => {
                 <SelectContent >
                     <SelectGroup  >
                         <SelectLabel>File Types:</SelectLabel>
-                        {FileFormat.map((item,index)=>(
+                        {FileFormat.map((item, index) => (
                             <SelectItem key={index} value={item.name}>{item.name}</SelectItem>
                         ))}
-                        
+
                         {/* <SelectItem value="Key Store">Key Store</SelectItem> */}
 
                     </SelectGroup>
@@ -278,8 +283,8 @@ const ExcelUploader = () => {
                 accept=".xlsx, .xls, .xlsb"
                 id='upload'
                 onChange={handleFileChange}
-                
-                disabled={ loading }
+
+                disabled={loading}
                 className="py-2 px-4 border rounded file hidden"
             />
             <p className='text-left w-full text-gray-400 text-sm'>Supported format: XLS , XLSX , XLSB</p>
@@ -303,7 +308,7 @@ const ExcelUploader = () => {
                             src="/excel.svg"
                             width={24}
                             height={24}
-                            alt="Picture of the author"
+                            alt="Excel Image"
                         />
                         <p>Table Example</p>
                     </div>

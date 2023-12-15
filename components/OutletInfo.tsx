@@ -1,6 +1,5 @@
 import { BiSolidStore } from "react-icons/bi"
-import CatDataTable from "./CatDataTable";
-
+import CatDataTables from "./CatDataTables";
 interface Props {
     outletData: Array<any>
   }
@@ -56,12 +55,6 @@ const OutletInfo: React.FC<Props> = ({ outletData }) => {
 
       const masterCategoryAggregated = aggregateData("master_category",outletData);
       const cat1Aggregated = aggregateData("cat_1",outletData);
-        // const filteredMasterCategoryData = masterCategoryAggregated?.map((item) => {
-        // const { cat_1, cat_3, ...rest } = item;
-        // return { ...rest };
-        // });
-
-        // console.log(filteredMasterCategoryData[2]);
 
   return (
     <div className="flex-1 p-4">
@@ -69,7 +62,7 @@ const OutletInfo: React.FC<Props> = ({ outletData }) => {
         <BiSolidStore className="w-6 h-6" />
         <h1 className="text-xl font-bold">{outletData[0].outlet_name} - {outletData[0].outlet_format}</h1>
     </div>
-    <CatDataTable masterCategoryData={masterCategoryAggregated} cat1Data={cat1Aggregated} data={outletData}/>
+    <CatDataTables masterCategoryData={masterCategoryAggregated} cat1Data={cat1Aggregated} data={outletData}/>
     {/* Add more content as needed */}
 </div>
   )

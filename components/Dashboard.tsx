@@ -1,3 +1,5 @@
+"use client"
+
 import Download from "@/components/Download";
 import Filter from "@/components/Filter";
 import GrowthCard from "@/components/GrowthCard";
@@ -6,6 +8,7 @@ import { MdDashboard } from "react-icons/md";
 import SimpleCard from "./SimpleCard";
 import StoreLevelTable from "./StoreLevelTable";
 import { sumFunctionAnyStores, calculateDiff, calculateTotalPercentage, storeGrowth, storeDeGrowth, calculateNormalPercentage } from "@/utility";
+import { useState } from "react";
 
 
 interface Props {
@@ -15,6 +18,7 @@ interface Props {
 const Dashboard: React.FC<Props> = ({ data }) => {
 
   // console.log(catData);
+  const [searchResults, setSearchResults] = useState([]);
 
   const updatedData = data?.map(item => ({
     ...item,
@@ -22,6 +26,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
     gpv_growth: calculateNormalPercentage(item.gpv_this, item.gpv_last),
     ff_growth: calculateNormalPercentage(item.ff_this, item.ff_last),
   }));
+  
 
   // console.log(updatedData);
 
