@@ -40,7 +40,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         const benchStorecatLevelData = await catLevelModel.find({ outlet_code: benchStore[0].outlet_code }).lean();
         // console.log(benchStorecatLevelData[0]);
 
-        return NextResponse.json({outletData: updatedA, benchOutletData: benchStorecatLevelData})
+        return NextResponse.json(updatedA)
 
     } catch (error) {
         return NextResponse.json({message: "An error occurred while getting the data!."}, {status: 500})
