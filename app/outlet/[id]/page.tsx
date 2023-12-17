@@ -31,14 +31,13 @@ async function getData(id: string) {
 
 const page = async ({ params }: { params: { id: string } }) => {
     const { id } = params
-    const outletData = await getData(id)
+    const data = await getData(id)
+    // const { outletData, benchOutletData } = await getData(id)
 
-    console.log(outletData);
+    return (<>
 
-    return (
-    <>
-        <p>{outletData[0].outlet_code}</p>
-        {/* {<OutletInfo outletData={outletData} benchOutletData={benchOutletData} />} */}
+        {/* {<OutletInfo   outletData={outletData} benchOutletData={benchOutletData} />} */}
+        {<OutletInfo data={data}  />}
 
     </>
     )

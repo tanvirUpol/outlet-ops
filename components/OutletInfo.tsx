@@ -1,12 +1,27 @@
 import { BiSolidStore } from "react-icons/bi"
 import CatDataTables from "./CatDataTables";
+// interface Props {
+//   outletData: Array<any>
+//   benchOutletData: Array<any>
+// }
 interface Props {
-  outletData: Array<any>
-  benchOutletData: Array<any>
+  data: {}
+  
 }
 
-const OutletInfo: React.FC<Props> = ({ outletData = [], benchOutletData = [] }) => {
+interface Data {
+  outletData?: any; // replace 'any' with the actual type of outletData
+  benchOutletData?: any; // replace 'any' with the actual type of benchOutletData
+  // other properties...
+}
+
+
+const OutletInfo: React.FC<Props> = ({ data }) => {
   // console.log(outletData[2]);
+
+  // console.log(data);
+
+  const {outletData, benchOutletData } : Data = data
 
 
   interface OutletItem {
@@ -55,15 +70,11 @@ const OutletInfo: React.FC<Props> = ({ outletData = [], benchOutletData = [] }) 
 
 
 
-  const benchOutletDataMap = new Map(benchOutletData.map(item => [`${item.cat_3}_${item.cat_1}`, item]));
+  const benchOutletDataMap = new Map(benchOutletData.map((item:any) => [`${item.cat_3}_${item.cat_1}`, item]));
 
-  // console.log(benchOutletDataMap);
 
-  // --------------------------------------------------
-
-  // Map over outletData and add the additional fields from benchOutletData
-  const mergedData = outletData.map(item => {
-    const benchData = benchOutletDataMap.get(`${item.cat_3}_${item.cat_1}`);
+  const mergedData = outletData.map((item:any) => {
+    const benchData:any = benchOutletDataMap.get(`${item.cat_3}_${item.cat_1}`);
 
     if (benchData) {
       // Spread the fields from benchData into item
