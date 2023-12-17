@@ -1,5 +1,6 @@
 import { BiSolidStore } from "react-icons/bi"
 import CatDataTables from "./CatDataTables";
+import { Tooltip } from 'react-tooltip'
 // interface Props {
 //   outletData: Array<any>
 //   benchOutletData: Array<any>
@@ -98,30 +99,22 @@ const OutletInfo: React.FC<Props> = ({ data }) => {
   });
 
 
-  // console.log(mergedData[0]);
-
-
-  // --------------------------------------------------
 
   const masterCategoryAggregated = aggregateData("master_category", mergedData);
   const cat1Aggregated = aggregateData("cat_1", outletData);
 
 
-  // console.log(masterCategoryAggregated[0]);
-
-
-
-
-
   return (
-    <div className="flex-1 p-4">
-      <div className="flex items-center gap-2 mb-4 text-gray-800">
+    <div className="flex-1 sm:p-4">
+      <div className="flex items-center gap-2 mb-8 text-gray-800">
         <BiSolidStore className="w-6 h-6" />
-        <h1 className="text-sm md:text-xl font-bold">{outletData[0]?.outlet_name} - {outletData[0]?.outlet_format}</h1>
+        <h1
+          title={outletData[0]?.outlet_name}
+          className="text-sm sm:text-xl font-bold">{outletData[0]?.outlet_code} - {outletData[0]?.outlet_format}
+        </h1>
         {/* <h1 className="text-sm md:text-xl font-bold">{benchOutletData[0].outlet_name} - {benchOutletData[0].outlet_format}</h1> */}
       </div>
       <CatDataTables masterCategoryData={masterCategoryAggregated} cat1Data={cat1Aggregated} data={mergedData} />
-      {/* Add more content as needed */}
     </div>
   )
 }

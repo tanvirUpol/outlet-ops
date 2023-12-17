@@ -3,9 +3,10 @@ import { CiSearch } from "react-icons/ci";
 
 interface SearchBarProps {
     handleSearch: (query: string) => void;
+    placeHolder: string
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ handleSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ handleSearch, placeHolder }) => {
     const [searchText, setSearchText] = useState('');
 
     const handleSearchChange = (e:any) => {
@@ -22,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ handleSearch }) => {
                 <CiSearch className="w-6 h-6 text-slate-400" />
             </span>
             <input 
-                className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 text-sm" placeholder="Search by code or name" type="text" name="search"
+                className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 text-sm" placeholder={placeHolder} type="text" name="search"
                 value={searchText}
                 onChange={handleSearchChange}
             />

@@ -59,7 +59,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
   };
 
   return (
-    <div className="mb-4 mt-8 flex flex-col items-stretch w-full">
+    <div className="mb-4 mt-8 flex flex-col items-stretch w-full bg">
       <div className="flex justify-between w-full items-center">
 
       <div className="flex items-center  gap-2 p-1 text-gray-800 ">
@@ -68,6 +68,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
         </div>
 
         <div className="flex justify-start gap-2 items-center mb-2">
+          <SearchBar handleSearch={handleSearch} placeHolder="Search by name or code" />
           <Select value={type} onValueChange={(e) => setType(e)} >
             <SelectTrigger className="w-[150px] font-semibold shadow-sm" >
               <SelectValue placeholder="Select a File" />
@@ -82,7 +83,6 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
             </SelectContent>
           </Select>
 
-          <SearchBar handleSearch={handleSearch} />
         </div>
       </div>
       <div className="mb-4   rounded auto overflow-scroll h-[80dvh] shadow   relative " >
