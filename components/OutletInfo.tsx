@@ -1,6 +1,5 @@
 import { BiSolidStore } from "react-icons/bi"
 import CatDataTables from "./CatDataTables";
-import { Tooltip } from 'react-tooltip'
 // interface Props {
 //   outletData: Array<any>
 //   benchOutletData: Array<any>
