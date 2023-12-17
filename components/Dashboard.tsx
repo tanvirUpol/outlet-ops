@@ -17,8 +17,7 @@ interface Props {
 
 const Dashboard: React.FC<Props> = ({ data }) => {
 
-  // console.log(catData);
-  const [searchResults, setSearchResults] = useState([]);
+
 
   const updatedData = data?.map(item => ({
     ...item,
@@ -51,12 +50,12 @@ const Dashboard: React.FC<Props> = ({ data }) => {
   return (
     <main className="">
       <div className="flex-1">
-        <div className="flex items-center gap-2 mb-4 text-gray-800 ">
+        <div className="flex items-center  gap-2 mb-4 text-gray-800 ">
           <MdDashboard className="w-6 h-6" />
           <h1 className="text-2xl font-bold">Dashboard</h1>
         </div>
-        <div className="w-full my-4 flex flex-col md:flex-row  items-start md:items-center justify-between ">
-          <SearchBar />
+        <div className="w-full my-4 gap-2 flex flex-col md:flex-row  items-start md:items-center justify-end ">
+          
           <div className="flex justify-between gap-4 w-full md:w-auto">
             <Download data={data} fileName="Store Level Data"/>
             <Filter />

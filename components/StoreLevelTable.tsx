@@ -1,5 +1,5 @@
 "use client"
-
+import { GrOverview } from "react-icons/gr";
 import { numFor } from "@/utility"
 import {
   Select,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import { useState } from "react"
 import Link from "next/link"
+import SearchBar from "./SearchBar"
 
 interface Props {
   data: Array<any>
@@ -23,13 +24,14 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
   const [type, setType] = useState("sales")
   const [sortOrder, setSortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("desc");
+  const [searchResults, setSearchResults] = useState([]);
 
 
   const toggleSort = (column: string) => {
     console.log(column);
     if (column === sortBy) {
       // If the same column is clicked, toggle the sorting direction
-      console.log(column);
+      // console.log(column);
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       // If a new column is clicked, set it as the sorting column and default to ascending order
@@ -38,7 +40,7 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
     }
   };
 
-  const sortedOutlets = (data)
+  const sortedOutlets = (searchResults.length > 0 ? searchResults : data)
     ?.slice().sort((a, b) => {
       const aValue = parseFloat(a[sortBy]);
       const bValue = parseFloat(b[sortBy]);
@@ -49,39 +51,51 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
       }
     });
 
-
+  const handleSearch = (query: string) => {
+    const results = data.filter((outlet) =>
+      outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) || outlet.outlet_name.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchResults(results as any);
+  };
 
   return (
-    <div className="my-4 flex flex-col items-stretch">
-      <Select value={type} onValueChange={(e) => setType(e)} >
-        <SelectTrigger className="w-[150px] md:w-[180px] mb-2" >
-          <SelectValue placeholder="Select a File" />
-        </SelectTrigger>
-        <SelectContent >
-          <SelectGroup  >
-            <SelectLabel>Formats</SelectLabel>
+    <div className="mb-4 mt-8 flex flex-col items-stretch w-full">
+      <div className="flex justify-between w-full items-center">
 
-            <SelectItem value="sales">Sales</SelectItem>
-            <SelectItem value="gpv">GPV</SelectItem>
-            <SelectItem value="ff">Foot Fall</SelectItem>
+      <div className="flex items-center  gap-2 p-1 text-gray-800 ">
+          <GrOverview className="w-5 h-5" />
+          <h1 className="text-xl font-bold">Dashboard</h1>
+        </div>
 
+        <div className="flex justify-start gap-2 items-center mb-2">
+          <Select value={type} onValueChange={(e) => setType(e)} >
+            <SelectTrigger className="w-[150px] font-semibold shadow-sm" >
+              <SelectValue placeholder="Select a File" />
+            </SelectTrigger>
+            <SelectContent >
+              <SelectGroup  >
+                <SelectLabel>Formats</SelectLabel>
+                <SelectItem value="sales">Sales</SelectItem>
+                <SelectItem value="gpv">GPV</SelectItem>
+                <SelectItem value="ff">Foot Fall</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
-            {/* <SelectItem value="Key Store">Key Store</SelectItem> */}
-
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+          <SearchBar handleSearch={handleSearch} />
+        </div>
+      </div>
       <div className="mb-4   rounded auto overflow-scroll h-[80dvh] shadow   relative " >
         <table className=" table-fixed w-[768px] md:w-full shadow-sm rounded ">
           <thead className="sticky top-0" >
             <tr className="bg-slate-800" >
               {/* <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"> Code</th> */}
               <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Outlet Name</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_this")}>{type} This {sortBy === `${type}_this` &&
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort(type + "_this")}>{type} This {sortBy === `${type}_this` &&
                 (sortOrder === "asc" ? "▲" : " ▼")}</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_last")}>{type} Last {sortBy === `${type}_last` &&
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort(type + "_last")}>{type} Last {sortBy === `${type}_last` &&
                 (sortOrder === "asc" ? "▲" : " ▼")}</th>
-              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort( type + "_growth")} >{type} Growth {sortBy === `${type}_growth`&&
+              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort(type + "_growth")} >{type} Growth {sortBy === `${type}_growth` &&
                 (sortOrder === "asc" ? "▲" : " ▼")} </th>
               {/* Add more headers based on your data */}
             </tr>
