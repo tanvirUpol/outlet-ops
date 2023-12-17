@@ -31,10 +31,10 @@ async function getData(id:string) {
 
 const page   = async ({ params }: { params: { id: string } }) => {
     const { id } = params
-    const outletData = await getData(id)
+    const {outletData, benchOutletData} = await getData(id)
 
     return (
-       <OutletInfo outletData={outletData} />
+       <OutletInfo outletData={outletData} benchOutletData={benchOutletData} />
     )
 }
 

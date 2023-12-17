@@ -40,7 +40,7 @@ const ExcelUploader = () => {
         },
         {
             name: "Store Level",
-            headers: ["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            headers: ["gp_percent","outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
         },
         {
@@ -61,6 +61,9 @@ const ExcelUploader = () => {
         // console.log(actual_format, given_format);
         return actual_format.every(item => given_format.includes(item.toLowerCase()));
     }
+
+
+
 
     const handleFileChange = async (e: any) => {
         // console.log(selectedOpt.selectedFileFormat);
@@ -92,6 +95,11 @@ const ExcelUploader = () => {
                             let jsonData: any[] = XLSX.utils.sheet_to_json(sheet, {
                                 defval: 'not available', // Set default value for empty cells
                             });
+
+
+                            if(selectedOpt.selectedFileFormat === "Store Level"){
+                                console.log("Hello");
+                            }
 
 
                             // Convert all values to string

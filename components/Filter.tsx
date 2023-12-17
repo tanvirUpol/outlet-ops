@@ -31,7 +31,7 @@ const Filter = () => {
   return (
     <div className="relative">
       <button
-        className="flex gap-2 justify-center items-center px-3 py-1 text-sm  shadow border border-gray-100 my-4 rounded-md w-fit transition-all duration-300 ease-in-out transform hover:scale-105"
+        className="flex gap-2 justify-center items-center px-3 py-1 text-sm  shadow border border-gray-100  rounded-md w-fit transition-all duration-300 ease-in-out transform hover:scale-105"
         onClick={toggleFilter}
       >
         <BsFilterLeft className="w-6 h-6" />

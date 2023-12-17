@@ -1,6 +1,7 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import catLevelModel from "@/models/catLevelModel";
 import keyStoreModel from "@/models/keyStoreModel";
+import benchStoresModel from "@/models/BenchStoresModel";
 import { NextResponse } from "next/server";
 
 
@@ -71,7 +72,11 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
             return objA;
         });
 
-        return NextResponse.json(updatedA)
+        const benchStore = await benchStoresModel.find({outlet_format: updatedA[0].outlet_format}).lean()
+        const benchStorecatLevelData = await catLevelModel.find({ outlet_code: benchStore[0].outlet_code }).lean();
+        // console.log(benchStorecatLevelData[0]);
+
+        return NextResponse.json({outletData: updatedA, benchOutletData: benchStorecatLevelData})
 
     } catch (error:any) {
         console.error('Error:', error.message);

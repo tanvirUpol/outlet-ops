@@ -64,6 +64,22 @@ const storeLevelSchema = new mongoose.Schema({
   day: {
     type: String,
     required: true
+  },
+  outlet_zone: {
+    type: String,
+    required: true
+  },
+  outlet_division: {
+    type: String,
+    required: true
+  },
+  outlet_status: {
+    type: String,
+    required: true
+  },
+  outlet_format: {
+    type: String,
+    required: true
   }
 });
 

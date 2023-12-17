@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { addGrowth } from '@/utility'
-import BasicTable from './BasicTable'
+import CatTable from './CatTable'
 import { TbCategoryFilled } from 'react-icons/tb'
 
 import {
@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import Download from './Download'
 
 interface Props {
     masterCategoryData: Array<any>
@@ -23,8 +24,8 @@ interface Props {
 
 const CatDataTable: React.FC<Props> = ({ masterCategoryData, cat1Data, data }) => {
     const [type, setType] = useState("sales")
-    const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("");
+    // const [sortOrder, setSortOrder] = useState("asc");
+    // const [sortBy, setSortBy] = useState("");
     // const [selectedMetric, setSelectedMetric] = useState("sales");
     // const [expandedMaster, setExpandedMaster] = useState("");
     // const [expandedCat1, setExpandedCat1] = useState("");
@@ -113,35 +114,39 @@ const CatDataTable: React.FC<Props> = ({ masterCategoryData, cat1Data, data }) =
 
     return (
         <>
-            <Select value={type} onValueChange={(e) => setType(e)} >
-                <SelectTrigger className="w-[150px] md:w-[180px] mb-2" >
-                    <SelectValue placeholder="Select a File" />
-                </SelectTrigger>
-                <SelectContent >
-                    <SelectGroup  >
-                        <SelectLabel>Formats</SelectLabel>
-                        <SelectItem value="sales">Sales</SelectItem>
-                        <SelectItem value="gpv">GPV</SelectItem>
-                        <SelectItem value="ff">Foot Fall</SelectItem>
-                        <SelectItem value="bs">Basket</SelectItem>
+            <div className='flex gap-2 mb-2 justify-between'>
 
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
+                <Select value={type} onValueChange={(e) => setType(e)} >
+                    <SelectTrigger className="w-[150px] md:w-[180px] text-sm md:text-base" >
+                        <SelectValue placeholder="Select a File" />
+                    </SelectTrigger>
+                    <SelectContent >
+                        <SelectGroup  >
+                            <SelectLabel>Formats</SelectLabel>
+                            <SelectItem value="sales">Sales</SelectItem>
+                            <SelectItem value="gpv">GPV</SelectItem>
+                            <SelectItem value="ff">Foot Fall</SelectItem>
+                            <SelectItem value="bs">Basket</SelectItem>
+
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Download data={data} fileName='category level' />
+            </div>
             <div className='my-4 flex items-center gap-2 '>
-                <TbCategoryFilled className="w-6 h-6 text-slate-900" />
-                <p className='uppercase text-lg font-bold ' >
+                <TbCategoryFilled className="w-4 h-4 md:w-6 md:h-6 text-slate-900" />
+                <p className='uppercase text-sm md:text-lg font-bold ' >
                     Master Category Items
                 </p>
             </div>
-            <BasicTable data={masterCategoryDataUpdated} category={Mastercategory} type={type} />
+            <CatTable data={masterCategoryDataUpdated} category={Mastercategory} type={type} />
             <div className='my-4 mt-8 flex items-center gap-2'>
-                <TbCategoryFilled className="w-6 h-6" />
-                <p className='uppercase text-lg font-bold ' >
+                <TbCategoryFilled className="w-4 h-4 md:w-6 md:h-6" />
+                <p className='uppercase text-sm md:text-lg font-bold' >
                     Cat 3 Items
                 </p>
             </div>
-            <BasicTable data={cat3DataUpdated} category={cat3category} type={type} />
+            <CatTable data={cat3DataUpdated} category={cat3category} type={type} />
         </>
 
         // <div>

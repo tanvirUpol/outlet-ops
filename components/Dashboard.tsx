@@ -55,10 +55,10 @@ const Dashboard: React.FC<Props> = ({ data }) => {
           <MdDashboard className="w-6 h-6" />
           <h1 className="text-2xl font-bold">Dashboard</h1>
         </div>
-        <div className="w-full flex flex-col md:flex-row  items-start md:items-center justify-between ">
+        <div className="w-full my-4 flex flex-col md:flex-row  items-start md:items-center justify-between ">
           <SearchBar />
-          <div className="flex items-center justify-between gap-4 w-full md:w-auto">
-            <Download />
+          <div className="flex justify-between gap-4 w-full md:w-auto">
+            <Download data={data} fileName="Store Level Data"/>
             <Filter />
           </div>
         </div>

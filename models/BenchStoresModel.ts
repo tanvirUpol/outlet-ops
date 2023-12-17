@@ -11,6 +11,10 @@ const benchStoreSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  outlet_format: {
+    type: String,
+    required: true
+  }
 });
 
 const benchStoresModel = models.benchStores || mongoose.model('benchStores', benchStoreSchema);
