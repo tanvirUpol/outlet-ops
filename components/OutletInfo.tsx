@@ -106,7 +106,7 @@ const OutletInfo: React.FC<Props> = ({ outletData = [], benchOutletData = [] }) 
     <div className="flex-1 p-4">
       <div className="flex items-center gap-2 mb-4 text-gray-800">
         <BiSolidStore className="w-6 h-6" />
-        <h1 className="text-sm md:text-xl font-bold">{outletData[0].outlet_name} - {outletData[0].outlet_format}</h1>
+        <h1 className="text-sm md:text-xl font-bold">{outletData[0]?.outlet_name} - {outletData[0]?.outlet_format}</h1>
         {/* <h1 className="text-sm md:text-xl font-bold">{benchOutletData[0].outlet_name} - {benchOutletData[0].outlet_format}</h1> */}
       </div>
       <CatDataTables masterCategoryData={masterCategoryAggregated} cat1Data={cat1Aggregated} data={mergedData} />
