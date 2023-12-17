@@ -1,7 +1,6 @@
 export const sumFunctionAnyStores = (data: any, field: string) => {
   const summedData = data.reduce(
-    (sum: number, obj: any) => sum + parseFloat(obj[field])?parseFloat(obj[field]):0,
-    0
+    (sum: number, obj: any) => sum + (parseFloat(obj[field])?parseFloat(obj[field]):0),0
   );
   return summedData;
 }

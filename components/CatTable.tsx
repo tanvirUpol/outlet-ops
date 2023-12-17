@@ -78,15 +78,15 @@ const BasicTable: React.FC<Props> = ({ data, category, type }) => {
                                         {item[category.key]}
                                     </Link>
                                 </td>
-                                <td className="py-3 px-4 border-b">{numFor.format((parseFloat(item["sales_contribution"])))}</td>
-                                <td className="py-3 px-4 border-b">{numFor.format((parseFloat(item["bench_sales_contribution"])))}</td>
+                                <td className={`py-3 px-4 border-b ${(item["sales_contribution"] >= 0) ? "text-teal-500" : "text-rose-600"}`}>{((parseFloat(item["sales_contribution"])).toFixed(2))}%</td>
+                                <td className={`py-3 px-4 border-b ${(item["bench_sales_contribution"] >= 0) ? "text-teal-500" : "text-rose-600"}`}>{Object.is(item["bench_sales_contribution"], NaN) ? "N/A" : (parseFloat(item["bench_sales_contribution"]).toFixed(2))}%</td>
                                 <td className="py-3 px-4 border-b">{numFor.format((parseFloat(item[type + "_this"])))}</td>
                                 <td className="py-3 px-4 border-b">{numFor.format(parseFloat(item[type + "_diff"]))}</td>
                                 <td className={`py-3 px-4 border-b ${(item[type + "_growth"] >= 0) ? "text-teal-500" : "text-rose-600"}`}>  {(item[type + "_growth"] > 0) && <span>+</span>}
                                     {(item[type + "_growth"]).toFixed(2)} %
                                 </td>
                                 <td className="py-3 px-4 border-b">{numFor.format((item["gp_percent"].toFixed(2)))}%</td>
-                                <td className="py-3 px-4 border-b">{numFor.format((item["bench_gp_percent"].toFixed(2)))}%</td>
+                                <td className="py-3 px-4 border-b">{Object.is(item["bench_gp_percent"], NaN) ? "N/A" : numFor.format((item["bench_gp_percent"].toFixed(2)))}%</td>
 
                             </tr>}
                         </React.Fragment>
