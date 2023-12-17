@@ -5,7 +5,7 @@ interface Props {
   benchOutletData: Array<any>
 }
 
-const OutletInfo: React.FC<Props> = ({ outletData, benchOutletData }) => {
+const OutletInfo: React.FC<Props> = ({ outletData = [], benchOutletData = [] }) => {
   // console.log(outletData[2]);
 
 
