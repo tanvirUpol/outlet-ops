@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
     try {
         const { id } = params;
         await connectMongoDB();
@@ -42,13 +42,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
         return NextResponse.json({outletData: updatedA, benchOutletData: benchStorecatLevelData})
 
-    } catch (error:any) {
-        console.error('Error:', error.message);
-        // Handle the error or return an appropriate response
-        // For example, you can send an error response to the client
-        return {
-            status: 500, // Internal Server Error
-            body: JSON.stringify({ error: error.message }),
-        };
+    } catch (error) {
+        return NextResponse.json({message: "An error occurred while getting the data!."}, {status: 500})
     }
 }
