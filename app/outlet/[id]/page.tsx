@@ -35,7 +35,7 @@ const page = async ({ params }: { params: { id: string } }) => {
 
     return (<>
 
-        {outletData.length > 0 && <OutletInfo outletData={outletData} benchOutletData={benchOutletData} />}
+        {outletData?.length > 0 && <OutletInfo outletData={outletData} benchOutletData={benchOutletData} />}
 
     </>
     )
