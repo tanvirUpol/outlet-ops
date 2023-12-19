@@ -6,7 +6,6 @@ import CatDataTables from "./CatDataTables";
 // }
 interface Props {
   data: {}
-  
 }
 
 interface Data {

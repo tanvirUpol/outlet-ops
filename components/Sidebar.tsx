@@ -24,7 +24,7 @@ const Sidebar = () => {
         {
             text: "Dashboard",
             icon: RxDashboard,
-            path: "/"
+            path: "/dashboard"
         },
         {
             text: "Target",
