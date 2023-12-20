@@ -1,10 +1,13 @@
 import Dashboard from "@/components/Dashboard";
+import { headers } from "next/headers"
 
 async function getStoreLevelData() {
   const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel", {
     next: {
       revalidate: 60
-    }
+    },
+    method: "GET",
+    headers: headers()
   })
   return res.json()
 

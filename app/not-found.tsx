@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function NotFound() {
     return (
-        <main className="text-center flex flex-col justify-center items-center h-full gap-2">
+        <main className="text-center flex flex-col justify-center items-center h-screen gap-2">
             <Image
                 src="/404.svg"
                 width={320}

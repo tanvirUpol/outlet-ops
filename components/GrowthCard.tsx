@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { IoMdArrowDropup } from "react-icons/io";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { IoStorefrontSharp } from "react-icons/io5";
+// import Link from "next/link"
+// import { IoMdArrowDropup } from "react-icons/io";
+// import { IoMdArrowDropdown } from "react-icons/io";
+// import { IoStorefrontSharp } from "react-icons/io5";
 import { IoStorefront } from "react-icons/io5";
 interface Props {
   title: string,
@@ -17,8 +17,7 @@ const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path, 
   const numFor = Intl.NumberFormat("en-US");
 
   return (
-    <Link
-      href={path}
+    <div
       className="w-full rounded-lg border border-gray-200 bg-white p-4 lg:p-5 shadow hover:bg-gray-100"
     >
       
@@ -55,7 +54,7 @@ const GrowthCard: React.FC<Props> = ({ title, mainData, diff, percentage, path, 
         </div>
       
 
-    </Link>
+    </div>
   )
 }
 

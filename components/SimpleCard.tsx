@@ -12,8 +12,8 @@ const SimpleCard: React.FC<Props> = ({ title, mainData, path }) => {
     const numFor = Intl.NumberFormat("en-US");
 
     return (
-        <Link
-            href={path}
+        <div
+            
             className="flex justify-between items-center  w-full rounded-lg border border-gray-200 bg-white p-5 shadow hover:bg-gray-100"
         >
             <div>
@@ -25,7 +25,7 @@ const SimpleCard: React.FC<Props> = ({ title, mainData, path }) => {
                 </p>
             </div>
 
-        </Link>
+        </div>
     )
 }
 

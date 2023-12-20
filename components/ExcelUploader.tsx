@@ -97,9 +97,9 @@ const ExcelUploader = () => {
                             });
 
 
-                            if(selectedOpt.selectedFileFormat === "Store Level"){
-                                console.log("Hello");
-                            }
+                            // if(selectedOpt.selectedFileFormat === "Store Level"){
+                            //     console.log("Hello");
+                            // }
 
 
                             // Convert all values to string

@@ -1,5 +1,6 @@
 "use client"
-import { useState } from 'react';
+import { signOut } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import { RxDashboard } from "react-icons/rx";
 import { TbRuler, TbTargetArrow } from "react-icons/tb";
@@ -10,11 +11,18 @@ import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { RiMapPinLine } from "react-icons/ri";
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-
+import { useSession } from "next-auth/react"
 
 const Sidebar = () => {
     const [isCollapsed, setCollapsed] = useState(true);
     const pathname = usePathname()
+    const {data: session } = useSession()
+
+    useEffect(() => {
+        localStorage.removeItem('user');
+    }, [])
+    
+    // console.log(session?.user?.role);
 
     const toggleSidebar = () => {
         setCollapsed(!isCollapsed);
@@ -24,22 +32,26 @@ const Sidebar = () => {
         {
             text: "Dashboard",
             icon: RxDashboard,
-            path: "/dashboard"
+            path: "/dashboard",
+            access: ["zonal","admin"]
         },
         {
             text: "Target",
             icon: TbTargetArrow,
-            path: "/target"
+            path: "/target",
+            access: ["zonal","admin"]
         },
         {
             text: "Map",
             icon: RiMapPinLine,
-            path: "/map"
+            path: "/map",
+            access: ["zonal","admin"]
         },
         {
             text: "Upload",
             icon: FiUploadCloud,
-            path: "/upload"
+            path: "/upload",
+            access: ["admin"]
         },
     ]
 
@@ -71,12 +83,12 @@ const Sidebar = () => {
                     <ul className='space-y-5'>
                         {
                             NavLinkObj.map((item, index) =>
-                                <Link key={index} href={item.path} className={`flex rounded-full items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === item.path ? 'active' : ''}`}>
+                              ( item.access.includes(session?.user?.role?session.user.role : "zonal") &&  <Link key={index} href={item.path} className={`flex rounded-full items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === item.path ? 'active' : ''}`}>
                                     <div className='p-3 bg-gray-900 rounded-full' >
                                         <item.icon className='w-5 h-5 box-content' />
                                     </div>
                                     <span className={`font-medium ${isCollapsed ? 'hidden' : 'inline'}`}>{item.text}</span>
-                                </Link>
+                                </Link>)
                             )
                         }
 
@@ -89,7 +101,7 @@ const Sidebar = () => {
                             </div>
                             <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Settings</span>
                         </li>
-                        <li className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
+                        <li onClick={() => signOut()} className={`flex items-center cursor-pointer  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
                             <div className='p-2 bg-gray-900 rounded-full' >
                                 <AiOutlineLogout className='w-5 h-5 box-content' />
                             </div>

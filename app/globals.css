@@ -84,6 +84,9 @@
   @apply sm:hover:bg-gray-900 sm:hover:rounded-lg transition-all
 }
 
+input {
+  @apply border border-gray-200 py-2 px-2 bg-zinc-100/40 rounded
+}
 
 @layer utilities {
       /* Hide scrollbar for Chrome, Safari and Opera */
