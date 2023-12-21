@@ -10,7 +10,6 @@ async function getStoreLevelData() {
     headers: headers()
   })
   return res.json()
-
 }
 
 

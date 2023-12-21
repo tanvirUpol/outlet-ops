@@ -3,7 +3,7 @@
 import Download from "@/components/Download";
 import Filter from "@/components/Filter";
 import GrowthCard from "@/components/GrowthCard";
-import SearchBar from "@/components/SearchBar";
+// import SearchBar from "@/components/SearchBar";
 import { MdDashboard } from "react-icons/md";
 import SimpleCard from "./SimpleCard";
 import StoreLevelTable from "./StoreLevelTable";
