@@ -1,18 +1,17 @@
-"use server"
-
 import Dashboard from "@/components/Dashboard";
 import { headers } from "next/headers"
 
 
-const headersList = headers();
-const cookie = headersList.get('cookie');
+// const headersList = headers();
+// const cookie = headersList.get('cookie');
 
 
 async function getStoreLevelData() {
   const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel", {
-    headers: {
-      'Cookie': cookie
-    },
+    // headers: {
+    //   'Cookie': cookie
+    // },
+    headers:new Headers(headers()),
     next: {
       revalidate: 60
     },

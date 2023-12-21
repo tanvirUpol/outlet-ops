@@ -80,6 +80,7 @@ export async function POST(req) {
 
 export async function GET(req) {
     // const session = await getServerSession(authOptions)
+    // console.log(process.env.NEXTAUTH_SECRET );
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     await connectMongoDB();
 
