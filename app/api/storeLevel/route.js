@@ -7,7 +7,8 @@ import { getToken } from "next-auth/jwt"
 import { NextRequestWithAuth } from "next-auth/middleware";
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../auth/[...nextauth]/route";
+// import { authOptions } from "../auth/[...nextauth]/route";
+import  authOptions  from "../auth/[...nextauth]/option";
 import UserSchemaModel from "@/models/userModel";
 
 const findBencOutlets = (data) => {
