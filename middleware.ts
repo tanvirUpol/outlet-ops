@@ -33,4 +33,4 @@ export default withAuth(
 )
 
 
-export const config = {matcher: ["/dashboard","/target","/map","/upload"]}
+export const config = {matcher: ["/dashboard","/target","/map","/upload" , "/outlet/:id*"]}

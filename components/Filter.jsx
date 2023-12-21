@@ -1,13 +1,21 @@
-"use client"
 import { useState, useEffect, useRef } from 'react';
 import { BsFilterLeft } from 'react-icons/bs';
+import DropDownFilter from "./DropDownFilter"
 
-const Filter = () => {
+// interface Props {
+//   data: Array<any>,
+//   // setFilteredData: []
+//   setFilteredData: any
+// }
+
+
+const Filter = ({data, setFilteredData}) => {
+  const filterRef = useRef(null);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const filterRef = useRef<any>(null);
+  const [selectedProfitable, setSelectedProfitablet] = useState([]);
 
   useEffect(() => {
-    const handleClickOutside = (event:any) => {
+    const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
         closeFilter();
       }
@@ -28,6 +36,35 @@ const Filter = () => {
     setIsFilterVisible(false);
   };
 
+// uniqe stuff
+  const uniqueProfitable = [
+    ...new Set(
+      data?.map((item) => {
+        return item.profitable;
+      })
+    ),
+  ];
+
+  const filteredDataX = data?.filter(
+    (item) => (selectedProfitable.length === 0 ||selectedProfitable.includes(item.profitable))
+  );
+
+
+  // console.log(filteredDataX);
+
+
+  //  setFilteredData(filteredData)
+
+  // setFilteredData(filteredData)
+
+
+  useEffect(() => {
+   setFilteredData(filteredDataX)
+  }, [selectedProfitable])
+  
+
+  
+
   return (
     <div className="relative">
       <button
@@ -44,12 +81,13 @@ const Filter = () => {
 
       <div
         ref={filterRef}
-        className={`filter-bar fixed top-0 right-0 w-60 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+        className={`filter-bar fixed top-0 right-0 w-60 bg-white shadow-md transform transition-transform duration-300 ease-in-out p-4 ${
           isFilterVisible ? 'translate-x-0' : 'translate-x-full'
         } z-20`}
       >
         {/* Your filter content goes here */}
-        <p className="p-4 h-screen">This is my filter content</p>
+        <DropDownFilter options={uniqueProfitable} screen={"mobile"} setSelectedValue={setSelectedProfitablet} selectedValue={selectedProfitable} title={"Profitable"} />
+        <p className="p-4 h-screen"></p>
       </div>
     </div>
   );

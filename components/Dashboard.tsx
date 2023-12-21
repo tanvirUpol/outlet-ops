@@ -8,6 +8,7 @@ import { MdDashboard } from "react-icons/md";
 import SimpleCard from "./SimpleCard";
 import StoreLevelTable from "./StoreLevelTable";
 import { sumFunctionAnyStores, calculateDiff, calculateTotalPercentage, storeGrowth, storeDeGrowth, calculateNormalPercentage } from "@/utility";
+import { useEffect, useState } from "react";
 
 
 
@@ -18,8 +19,10 @@ interface Props {
 const Dashboard: React.FC<Props> = ({ data }) => {
 
 
+  // console.log(data[0]);
+  const [filteredData,setFilteredData] = useState<any[]>([])
 
-  const updatedData = data?.map(item => ({
+  const updatedData = filteredData?.map(item => ({
     ...item,
     sales_growth: calculateNormalPercentage(item.sales_this, item.sales_last),
     gpv_growth: calculateNormalPercentage(item.gpv_this, item.gpv_last),
@@ -27,7 +30,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
   }));
   
 
-  // console.log(updatedData);
+  // console.log(filteredData);
 
   const allStore = updatedData.filter((obj) => parseFloat(obj["ff_this"]) >= 0);
   const sameStore = updatedData.filter((obj) => parseFloat(obj["ff_this"]) > 0 && parseFloat(obj["ff_last"]) > 0);
@@ -46,6 +49,10 @@ const Dashboard: React.FC<Props> = ({ data }) => {
     (item) => item.profitable.toLowerCase() !== "profitable"
   ).length;
 
+    // useEffect(() => {
+    //  console.log(filteredData);
+    // }, [filteredData])
+    
 
   return (
     <main className="">
@@ -58,7 +65,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
           
           <div className="flex justify-between gap-4 w-full md:w-auto">
             <Download data={data} fileName="Store Level Data"/>
-            <Filter />
+            <Filter data={data} setFilteredData={setFilteredData}  />
           </div>
         </div>
         <div className="grid grid-cols-1 min-[520px]:grid-cols-2 min-[1080px]:grid-cols-4 w-full gap-2 " >
