@@ -22,7 +22,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
   // console.log(data[0]);
   const [filteredData,setFilteredData] = useState<any[]>([])
 
-  const updatedData = filteredData?.map(item => ({
+  const updatedData = data?.map(item => ({
     ...item,
     sales_growth: calculateNormalPercentage(item.sales_this, item.sales_last),
     gpv_growth: calculateNormalPercentage(item.gpv_this, item.gpv_last),
@@ -65,7 +65,8 @@ const Dashboard: React.FC<Props> = ({ data }) => {
           
           <div className="flex justify-between gap-4 w-full md:w-auto">
             <Download data={data} fileName="Store Level Data"/>
-            <Filter data={data} setFilteredData={setFilteredData}  />
+            {/* <Filter data={data} setFilteredData={setFilteredData}  /> */}
+            <Filter   />
           </div>
         </div>
         <div className="grid grid-cols-1 min-[520px]:grid-cols-2 min-[1080px]:grid-cols-4 w-full gap-2 " >

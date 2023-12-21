@@ -1,3 +1,5 @@
+"use server"
+
 import Dashboard from "@/components/Dashboard";
 import { headers } from "next/headers"
 
