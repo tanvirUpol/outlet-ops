@@ -1,17 +1,24 @@
 "use client"
-import { signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+
+// icons
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import { RxDashboard } from "react-icons/rx";
-import { TbRuler, TbTargetArrow } from "react-icons/tb";
+import { TbTargetArrow } from "react-icons/tb";
 import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { FiUploadCloud } from "react-icons/fi";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { RiMapPinLine } from "react-icons/ri";
+import Image from 'next/image';
+
+// next
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
+
+// react auth
 import { useSession } from "next-auth/react"
+import { signOut } from 'next-auth/react';
 
 const Sidebar = () => {
     const [isCollapsed, setCollapsed] = useState(true);
@@ -62,10 +69,17 @@ const Sidebar = () => {
             <div className={`flex-1 flex flex-col ${isCollapsed ? 'items-center' : 'items-start'} overflow-hidden `}>
                 {/* head button */}
                 <div className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-between'} mt-4  mb-24 w-full`}>
-                    <p className={`${isCollapsed ? 'hidden' : 'inline-block'} transition-opacity duration-300 whitespace-nowrap flex gap-2 items-center`}>
-                        <DocumentChartBarIcon className='w-6 h-6' />
+                    <p className={`${isCollapsed ? 'hidden' : 'inline-block'} transition-opacity duration-300 whitespace-nowrap flex gap-3 items-center`}>
+                        {/* <DocumentChartBarIcon className='w-6 h-6' /> */}
+                        <Image
+                        src="/logo.svg"
+                        width={24}
+                        height={24}
+                        alt="Picture of the author"
+                        className='text-white fill-white'
+                        />
                         <span>
-                            Operation Ops
+                            Outlet Pulse
                         </span>
                     </p>
 

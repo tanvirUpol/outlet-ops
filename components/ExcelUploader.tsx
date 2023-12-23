@@ -48,6 +48,11 @@ const ExcelUploader = () => {
             headers: ["outlet_code", "outlet_name", "zonal", "master_category", "cat_1", "cat_3", "ff_this", "ff_last", "sales_this", "sales_last", "format_sales_gr", "bs_this", "bs_last", "gpv_this", "gpv_last", "month", "day", "format_bs_gr", "format_ff_gr", "format_gpv_gr"],
             api_path: "api/catLevel"
         },
+        {
+            name: "Target Data",
+            headers: ["zonal", "sales_t", "sales_a", "gpv_t", "gpv_a", "profit_t", "profit_a", "churn_t", "churn_a", "reactivation_t", "reactivation_a", "ff_t", "ff_a"],
+            api_path: "api/target"
+        },
         // {
         //     name: "Bench Mark Stores",
         //     headers: ["outlet_code", "outlet_name"],

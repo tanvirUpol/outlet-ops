@@ -2,7 +2,7 @@ import Sidebar from "@/components/Sidebar"
 
 
 export const metadata = {
-    title: 'Outlet Ops | Dashboard',
+    title: 'Pulse | Dashboard',
     description: 'Made by Upol',
 }
 

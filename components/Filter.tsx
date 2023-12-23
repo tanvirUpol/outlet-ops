@@ -96,10 +96,14 @@
 "use client"
 import { useState, useEffect, useRef } from 'react';
 import { BsFilterLeft } from 'react-icons/bs';
+import DropDownFilter from "./DropDownFilter"
 
-const Filter = () => {
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
+const Filter = ({data, setFilteredData}) => {
   const filterRef = useRef<any>(null);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  // filets
+  const [selectedProfitable, setSelectedProfitablet] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (event:any) => {
@@ -123,6 +127,36 @@ const Filter = () => {
     setIsFilterVisible(false);
   };
 
+
+
+  // uniqe stuff
+  const uniqueProfitable = [
+    ...new Set(
+      data?.map((item) => {
+        return item.profitable;
+      })
+    ),
+  ];
+
+  const filteredDataX = data?.filter(
+    (item: { profitable: any; }) => (selectedProfitable.length === 0 ||selectedProfitable.includes(item.profitable))
+  );
+
+
+  // console.log(filteredDataX);
+
+
+  //  setFilteredData(filteredData)
+
+  // setFilteredData(filteredData)
+
+
+  useEffect(() => {
+   setFilteredData(filteredDataX)
+  }, [selectedProfitable])
+  
+
+
   return (
     <div className="relative">
       <button
@@ -141,10 +175,11 @@ const Filter = () => {
         ref={filterRef}
         className={`filter-bar fixed top-0 right-0 w-60 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
           isFilterVisible ? 'translate-x-0' : 'translate-x-full'
-        } z-20`}
+        } z-20 p-4`}
       >
+        <DropDownFilter options={uniqueProfitable} screen={"mobile"} setSelectedValue={setSelectedProfitablet} selectedValue={selectedProfitable} title={"Profitable"} />
         {/* Your filter content goes here */}
-        <p className="p-4 h-screen">This is my filter content</p>
+        <p className="p-4 h-screen"></p>
       </div>
     </div>
   );

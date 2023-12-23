@@ -8,7 +8,7 @@ import { MdDashboard } from "react-icons/md";
 import SimpleCard from "./SimpleCard";
 import StoreLevelTable from "./StoreLevelTable";
 import { sumFunctionAnyStores, calculateDiff, calculateTotalPercentage, storeGrowth, storeDeGrowth, calculateNormalPercentage } from "@/utility";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 
 
@@ -32,8 +32,8 @@ const Dashboard: React.FC<Props> = ({ data }) => {
 
   // console.log(filteredData);
 
-  const allStore = updatedData.filter((obj) => parseFloat(obj["ff_this"]) >= 0);
-  const sameStore = updatedData.filter((obj) => parseFloat(obj["ff_this"]) > 0 && parseFloat(obj["ff_last"]) > 0);
+  const allStore = filteredData.filter((obj) => parseFloat(obj["ff_this"]) >= 0);
+  const sameStore = filteredData.filter((obj) => parseFloat(obj["ff_this"]) > 0 && parseFloat(obj["ff_last"]) > 0);
 
   const BSThisAll = sumFunctionAnyStores(allStore, "sales_this") / sumFunctionAnyStores(allStore, "ff_this")
   const BSLastAll = sumFunctionAnyStores(allStore, "sales_last") / sumFunctionAnyStores(allStore, "ff_last")
@@ -41,11 +41,11 @@ const Dashboard: React.FC<Props> = ({ data }) => {
   const BSLastSame = sumFunctionAnyStores(sameStore, "sales_last") / sumFunctionAnyStores(sameStore, "ff_last")
 
 
-  const totalProfitableStores = updatedData.filter(
+  const totalProfitableStores = filteredData.filter(
     (item) => item.profitable.toLowerCase() === "profitable"
   ).length;
 
-  const totalNonProfitableStores = updatedData.filter(
+  const totalNonProfitableStores = filteredData.filter(
     (item) => item.profitable.toLowerCase() !== "profitable"
   ).length;
 
@@ -66,7 +66,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
           <div className="flex justify-between gap-4 w-full md:w-auto">
             <Download data={data} fileName="Store Level Data"/>
             {/* <Filter data={data} setFilteredData={setFilteredData}  /> */}
-            <Filter   />
+            <Filter setFilteredData={setFilteredData} data={updatedData}  />
           </div>
         </div>
         <div className="grid grid-cols-1 min-[520px]:grid-cols-2 min-[1080px]:grid-cols-4 w-full gap-2 " >
@@ -96,7 +96,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
 
           {/* ------------------------------------ */}
         </div>
-        <StoreLevelTable data={updatedData} />
+        <StoreLevelTable data={filteredData} />
 
       </div>
     </main>
