@@ -41,7 +41,7 @@ const ExcelUploader = () => {
         },
         {
             name: "Store Level",
-            headers: ["gp_percent","outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            headers: ["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
         },
         {
@@ -218,17 +218,24 @@ const ExcelUploader = () => {
                     toast.success('Successfully submitted!')
                     setData([])
                     setLoading(false)
+                    const file: any = document.querySelector(".file");
+                    file.value = "";
 
                 } else {
                     console.log("submission failed");
                     toast.error('File Did not submit!')
                     setLoading(false)
                     setData([])
+                    const file: any = document.querySelector(".file");
+                    file.value = "";
                     //   setError(json.message)
                 }
 
             } catch (error) {
-                console.log("registration failed with:", error);
+                console.log("submission failed with:", error);
+                const file: any = document.querySelector(".file");
+                file.value = "";
+                toast.error('File Did not submit!')
                 setLoading(false)
 
             }

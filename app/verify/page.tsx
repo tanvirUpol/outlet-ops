@@ -71,14 +71,14 @@ const VerifyCode = () => {
 
   return (
     <div className="grid place-items-center h-screen container">
-      <div className="shadow-md p-5 rounded-lg border-t-4 border-teal-500 w-[310px] sm:w-[500px]">
+      <div className="shadow-md p-5 rounded-lg border-t-4 border-slate-500 w-[310px] sm:w-[500px]">
         <h1 className="text-xl font-bold my-4" >Enter Verification Code</h1>
         <h1 className="text-sm font-bold my-4" >Sent to: {user?.email}</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           {/* <input onChange={e=> setName(e.target.value)} type="text" value={name} placeholder="Name" /> */}
           <input className="w-full appearance-none" onChange={e=> setVcode(e.target.value)} type="number" value={vcode} placeholder="verification code" />
           {/* <input className="w-full" onChange={e=> setPassword(e.target.value)} type="password" value={password} placeholder="Password" /> */}
-          <button className="bg-teal-600 text-white py-2 font-bold rounded cursor-pointer">{loading? "Loading..." : "Verify"}</button>
+          <button className="bg-slate-600 text-white py-2 font-bold rounded cursor-pointer">{loading? "Loading..." : "Verify"}</button>
           { error &&
           <div>
             <p className="bg-rose-200 px-3 py-4 rounded text-rose-600 font-medium border border-red-600">{error}</p>

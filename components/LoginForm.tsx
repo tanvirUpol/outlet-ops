@@ -70,7 +70,7 @@ const LoginForm = () => {
 
   return (
     <div className="grid place-items-center h-screen container">
-      <div className="shadow-md p-5 rounded-lg border-t-4 border-teal-500 w-[300px] sm:w-[500px]">
+      <div className="shadow-md p-5 rounded-lg border-t-4 border-slate-600 w-[300px] sm:w-[500px]">
         <h1 className="text-xl font-bold my-4" >Sign In to your account</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           {/* <input onChange={e=> setName(e.target.value)} type="text" value={name} placeholder="Name" /> */}
@@ -126,7 +126,11 @@ const LoginForm = () => {
               )}
             </div>
           </div>
-          <button className="bg-teal-600 text-white py-2 font-bold rounded cursor-pointer">{loading ? "Loading..." : "Login"}</button>
+          <button className="bg-slate-600 text-white py-2 font-bold rounded cursor-pointer">
+            <p>
+              {loading ? "Loading..." : "Login"}
+            </p>
+          </button>
           {error &&
             <div>
               <p className="bg-rose-50 px-3 py-4 rounded text-rose-600 font-medium border border-red-600/50 border-dashed">{error}</p>
