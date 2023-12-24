@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         const { email, password } = await req.json();
 
         if (!email || !password) {
-            return NextResponse.json({ message: "Please enter a valid email and password" }, { status: 409 })
+            return NextResponse.json({ message: "Please enter a email and password" }, { status: 409 })
         }
         if (email && password) {
             const user = await UserSchemaModel.findOne({ email }).select('_id email password');

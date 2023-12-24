@@ -48,12 +48,12 @@ const Sidebar = () => {
             path: "/target",
             access: ["zonal","admin"]
         },
-        {
-            text: "Map",
-            icon: RiMapPinLine,
-            path: "/map",
-            access: ["zonal","admin"]
-        },
+        // {
+        //     text: "Map",
+        //     icon: RiMapPinLine,
+        //     path: "/map",
+        //     access: ["zonal","admin"]
+        // },
         {
             text: "Upload",
             icon: FiUploadCloud,
@@ -97,7 +97,8 @@ const Sidebar = () => {
                     <ul className='space-y-5'>
                         {
                             NavLinkObj.map((item, index) =>
-                              ( item.access.includes(session?.user?.role?session.user.role : "zonal") &&  <Link key={index} href={item.path} className={`flex rounded-full items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === item.path ? 'active' : ''}`}>
+                              ( item.access.includes((session?.user?.role)? (session.user.role) : "zonal") &&  
+                                <Link key={index} href={item.path} className={`flex rounded-full items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === item.path ? 'active' : ''}`}>
                                     <div className='p-3 bg-gray-900 rounded-full' >
                                         <item.icon className='w-5 h-5 box-content' />
                                     </div>
@@ -109,12 +110,12 @@ const Sidebar = () => {
                     </ul>
   
                     <ul className='space-y-5 pt-5 border-t border-gray-500'>
-                        <li className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
+                        <Link href={"/settings"} className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === "/settings" ? 'active' : ''}`}>
                             <div className='p-2 bg-gray-900 rounded-full' >
                                 <CiSettings className='w-5 h-5 box-content' />
                             </div>
                             <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Settings</span>
-                        </li>
+                        </Link>
                         <li onClick={() => signOut()} className={`flex items-center cursor-pointer  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
                             <div className='p-2 bg-gray-900 rounded-full' >
                                 <AiOutlineLogout className='w-5 h-5 box-content' />

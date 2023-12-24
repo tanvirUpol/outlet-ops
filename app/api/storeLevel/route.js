@@ -4,11 +4,6 @@ import storeLevelModel from "@/models/storeLevelModel";
 import keyStoreModel from "@/models/keyStoreModel";
 import benchStoresModel from "@/models/BenchStoresModel";
 import { getToken } from "next-auth/jwt"
-import { NextRequestWithAuth } from "next-auth/middleware";
-
-import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]/route";
-import  authOptions  from "../auth/[...nextauth]/option";
 import UserSchemaModel from "@/models/userModel";
 
 const findBencOutlets = (data) => {
