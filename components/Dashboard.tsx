@@ -14,10 +14,12 @@ import {  useState } from "react";
 
 interface Props {
   data: Array<any>
+  sameStoreData: Array<any>
 }
 
-const Dashboard: React.FC<Props> = ({ data }) => {
+const Dashboard: React.FC<Props> = ({ data, sameStoreData }) => {
 
+  // console.log(sameStoreData);
 
   // console.log(data[0]);
   const [filteredData,setFilteredData] = useState<any[]>([])
@@ -33,7 +35,8 @@ const Dashboard: React.FC<Props> = ({ data }) => {
   // console.log(filteredData);
 
   const allStore = filteredData.filter((obj) => parseFloat(obj["ff_this"]) >= 0);
-  const sameStore = filteredData.filter((obj) => parseFloat(obj["ff_this"]) > 0 && parseFloat(obj["ff_last"]) > 0);
+  // const sameStore = filteredData.filter((obj) => parseFloat(obj["ff_this"]) > 0 && parseFloat(obj["ff_last"]) > 0);
+  const sameStore = filteredData.filter((obj) => sameStoreData.includes(obj["outlet_code"]) )
 
   const BSThisAll = sumFunctionAnyStores(allStore, "sales_this") / sumFunctionAnyStores(allStore, "ff_this")
   const BSLastAll = sumFunctionAnyStores(allStore, "sales_last") / sumFunctionAnyStores(allStore, "ff_last")

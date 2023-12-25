@@ -22,11 +22,25 @@ async function getStoreLevelData() {
 }
 
 
+async function getSameStoreData() {
+  const res = await fetch(process.env.NEXTAUTH_URL + "/api/sameStore", {
+    next: {
+      revalidate: 60
+    },
+    method: "GET",
+    
+  })
+  return res.json()
+}
+
+
+
 export default async function Home() {
   const data = await getStoreLevelData()
+  const sameStoreData = await getSameStoreData()
   // console.log(data[0]);
 
   return (
-    <Dashboard data={data} />
+    <Dashboard data={data} sameStoreData={sameStoreData} />
   )
 }

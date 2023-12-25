@@ -54,6 +54,11 @@ const ExcelUploader = () => {
             headers: ["zonal", "sales_t", "sales_a", "gpv_t", "gpv_a", "profit_t", "profit_a", "churn_t", "churn_a", "reactivation_t", "reactivation_a", "ff_t", "ff_a"],
             api_path: "api/target"
         },
+        {
+            name: "Same Store Data",
+            headers: ["code"],
+            api_path: "api/sameStore"
+        },
         // {
         //     name: "Bench Mark Stores",
         //     headers: ["outlet_code", "outlet_name"],
