@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 export async function GET() {
     await connectMongoDB();
     const data = await sameStoreModel.find();
-    console.log(data[0].outlet_code);
+    // console.log(data[0].outlet_code);
     return NextResponse.json(data[0].outlet_code);
   }
   
