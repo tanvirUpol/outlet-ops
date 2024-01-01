@@ -59,6 +59,11 @@ const ExcelUploader = () => {
             headers: ["code"],
             api_path: "api/sameStore"
         },
+        {
+            name: "Upload Key Articles",
+            headers: ["article_code", "article_name"],
+            api_path: "api/keyArticle"
+        },
         // {
         //     name: "Bench Mark Stores",
         //     headers: ["outlet_code", "outlet_name"],
