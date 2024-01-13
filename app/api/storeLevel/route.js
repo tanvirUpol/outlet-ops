@@ -12,10 +12,11 @@ const findBencOutlets = (data) => {
 
     // Loop through the array of data to find the oldest item for each outlet_format
     data.forEach((item) => {
+        // console.log(benchObj);
         const { outlet_code, outlet_name, outlet_format, gp_percent } = item;
         // If the outlet_format is not already in the object or the current item is older
         if (!benchObj[outlet_format] || parseFloat(gp_percent) > parseFloat(benchObj[outlet_format].gp_percent)) {
-            benchObj[outlet_format] = { outlet_code, outlet_name, outlet_format };
+            benchObj[outlet_format] = { outlet_code, outlet_name, outlet_format , gp_percent };
         }
     });
 
@@ -62,6 +63,9 @@ export async function POST(req) {
         });
 
 
+        console.log(findBencOutlets(updatedA));
+
+        await benchStoresModel.deleteMany({})
         await benchStoresModel.create(findBencOutlets(updatedA))
         await storeLevelModel.create(updatedA)
         return NextResponse.json({ message: "Data Submitted" }, { status: 201 })

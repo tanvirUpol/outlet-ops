@@ -41,7 +41,7 @@ const ExcelUploader = () => {
         },
         {
             name: "Store Level",
-            headers: ["outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            headers: ["gp_percent","outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
         },
         {
@@ -210,7 +210,7 @@ const ExcelUploader = () => {
         if (data.length > 0) {
             console.log(data);
             setLoading(true)
-
+            // http://localhost:4000/api/keyArticle
             try {
                 const res = await fetch(selectedOpt.selectedPath, {
                     method: "POST",

@@ -1,16 +1,15 @@
+"use client"
 import { BiSolidStore } from "react-icons/bi"
 import CatDataTables from "./CatDataTables";
-// interface Props {
-//   outletData: Array<any>
-//   benchOutletData: Array<any>
-// }
+import { IoMdTrophy } from "react-icons/io";
+import Link from "next/link";
 interface Props {
   data: {}
 }
 
 interface Data {
-  outletData?: any; // replace 'any' with the actual type of outletData
-  benchOutletData?: any; // replace 'any' with the actual type of benchOutletData
+  outletData?: any; 
+  benchOutletData?: any; 
   // other properties...
 }
 
@@ -22,6 +21,7 @@ const OutletInfo: React.FC<Props> = ({ data }) => {
 
   const {outletData, benchOutletData } : Data = data
 
+  console.log(benchOutletData);
 
   interface OutletItem {
     [key: string]: string | number; // Adjust this based on the actual types of your data properties
@@ -87,6 +87,8 @@ const OutletInfo: React.FC<Props> = ({ data }) => {
         bench_ff_last: benchData.ff_last,
         bench_bs_this: benchData.bs_last,
         bench_bs_last: benchData.bs_last,
+        // bench_outlet_code: benchData.outlet_code,        
+        // bench_outlet_name: benchData.outlet_name,
         // bench_cat_3: benchData.cat_3,
         // Add other fields as needed
       };
@@ -104,13 +106,18 @@ const OutletInfo: React.FC<Props> = ({ data }) => {
 
   return (
     <div className="flex-1 sm:p-4">
-      <div className="flex items-center gap-2 mb-8 text-gray-800">
-        <BiSolidStore className="w-6 h-6" />
-        <h1
-          title={outletData[0]?.outlet_name}
-          className="text-sm sm:text-xl font-bold">{outletData[0]?.outlet_code} - {outletData[0]?.outlet_format}
-        </h1>
-        {/* <h1 className="text-sm md:text-xl font-bold">{benchOutletData[0].outlet_name} - {benchOutletData[0].outlet_format}</h1> */}
+      <div className="flex justify-between items-center">
+       <div className="flex items-center gap-2 mb-8 text-gray-800">
+          <BiSolidStore className="w-6 h-6" />
+          <h1
+            title={outletData[0]?.outlet_name}
+            className="text-sm sm:text-xl font-bold">{outletData[0]?.outlet_code} - {outletData[0]?.outlet_format}
+          </h1>
+       </div>
+       <div className="flex items-center gap-2 mb-8 text-gray-800 hover:text-teal-600"  >
+       <IoMdTrophy className="w-6 h-6" />
+        <Link  href={`/outlet/${benchOutletData[0].outlet_code}`} className="text-sm md:text-xl font-bold">{benchOutletData[0].outlet_name}</Link>
+       </div>
       </div>
       <CatDataTables masterCategoryData={masterCategoryAggregated} cat1Data={cat1Aggregated} data={mergedData} />
     </div>

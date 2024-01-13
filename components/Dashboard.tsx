@@ -19,7 +19,7 @@ interface Props {
 
 const Dashboard: React.FC<Props> = ({ data, sameStoreData }) => {
 
-  console.log(data);
+  // console.log(data);
 
   // console.log(sameStoreData);
 

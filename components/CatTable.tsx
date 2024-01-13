@@ -11,7 +11,7 @@ interface Props {
 
 
 const BasicTable: React.FC<Props> = ({ data, category, type }) => {
-
+//  console.log(data);
     const [sortOrder, setSortOrder] = useState("desc");
     const [sortBy, setSortBy] = useState("desc");
     const [searchResults, setSearchResults] = useState([]);
@@ -58,6 +58,7 @@ const BasicTable: React.FC<Props> = ({ data, category, type }) => {
                     <thead className="sticky top-0" >
                         <tr className="bg-slate-800" >
                             {/* <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"> Code</th> */}
+                           {category.key === "cat_3" && <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Master Category</th>}
                             <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">{category.name}</th>
                             <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white cursor-pointer" onClick={() => toggleSort("sales_contribution")}>Sales Cont.{sortBy === `sales_contribution` &&
                                 (sortOrder === "asc" ? "▲" : " ▼")}</th>
@@ -82,6 +83,9 @@ const BasicTable: React.FC<Props> = ({ data, category, type }) => {
 
                                 {item[category.key] !== "44-HOME DELIVERY" && item[category.key] !== "Undf# 2" && item[category.key] !== "0" && item[category.key] !== "Not assigned" && <tr className=" text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
                                     {/* <td className="py-2 px-4 border-b">{item.outlet_code}</td> */}
+                                   {category.key === "cat_3" && <td className="py-3 px-4 border-b ">
+                                        {item["master_category"]}
+                                    </td>}
                                     <td className="py-3 px-4 border-b ">
                                         {item[category.key]}
                                     </td>
