@@ -16,15 +16,60 @@ import ErrorText from './ErrorText';
 import ExampleTableDownload from './ExampleTableDownload';
 
 
+// Function to extract month from date in the format 'YYYY-MM-DD'
+function getMonthFromDate(dateString: string): string {
+    const [day, month, year] = dateString.split('-').map(Number);
+
+    // Check if the parsed values are valid
+    if (isNaN(day) || isNaN(month) || isNaN(year)) {
+        throw new Error('Invalid date format');
+    }
+
+    const date = new Date(year, month - 1, day); // Month is zero-based, so subtract 1
+
+    const parsedMonth = date.getMonth() + 1; // Month is zero-based, so add 1
+    const parsedYear = date.getFullYear();
+    return `${parsedYear}-${parsedMonth}`;
+}
+
+// Function to extract month from date in the format 'YYYY-MM-DD'
+function getDateFormat(dateString: string): string {
+    console.log(dateString);
+    const date = new Date(dateString);
+    const day = date.getDate(); 
+    const month = date.getMonth() + 1; // Month is zero-based, so add 1
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
+function getDateFormatExcel(excelDate: number): string {
+    const date = new Date((excelDate - 1) * 24 * 60 * 60 * 1000 + Date.UTC(1900, 0, 1));
+    const day = date.getDate() - 1;
+    const month = date.getMonth() + 1; // Month is zero-based, so add 1
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
+function getMonthFormatExcel(excelDate: number): string {
+    const date = new Date((excelDate - 1) * 24 * 60 * 60 * 1000 + Date.UTC(1900, 0, 1));
+    const day = date.getDate() - 1;
+    const month = date.getMonth() + 1; // Month is zero-based, so add 1
+    const year = date.getFullYear();
+    return `${year}-${month}`;
+}
+
 const ExcelUploader = () => {
     interface formFormat {
+        selectedFileName: string;
         selectedFileFormat: string | null;
         selectedHeaders: string[];
         selectedPath: string;
+
     }
     const [loading, setLoading] = useState<boolean>(false);
     const [fileName, setFileName] = useState<string>('');
     const [selectedOpt, setSelectedOpt] = useState<formFormat>({
+        selectedFileName: "",
         selectedFileFormat: null,
         selectedHeaders: [],
         selectedPath: "",
@@ -41,7 +86,7 @@ const ExcelUploader = () => {
         },
         {
             name: "Store Level",
-            headers: ["gp_percent","outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
+            headers: ["gp_percent", "outlet_code", "outlet_name", "zonal", "sales_contribution", "this_net_profit", "profitable", "ff_this", "ff_last", "bs_this", "bs_last", "gpv_this", "gpv_last", "sales_this", "sales_last", "month", "day"],
             api_path: "api/storeLevel"
         },
         {
@@ -60,9 +105,19 @@ const ExcelUploader = () => {
             api_path: "api/sameStore"
         },
         {
-            name: "Upload Key Articles",
+            name: "Key Articles",
             headers: ["article_code", "article_name"],
             api_path: "api/keyArticle"
+        },
+        {
+            name: "PNP Achivement",
+            headers: ["outlet_division", "outlet_format", "outlet_name"],
+            api_path: "api/achivement"
+        },
+        {
+            name: "Invoice Data",
+            headers: [],
+            api_path: "api/invoice"
         },
         // {
         //     name: "Bench Mark Stores",
@@ -94,9 +149,121 @@ const ExcelUploader = () => {
             setError("")
             const file = e.target.files[0];
 
+            console.log(file);
 
 
-            if (file) {
+            if (file && selectedOpt.selectedFileName === "PNP Achivement") {
+                setLoading(true);
+
+                try {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const binaryData = e.target?.result;
+
+                        try {
+                            const workbook = XLSX.read(binaryData, { type: 'binary' });
+
+                            const jsonDataArray: any[] = [];
+
+                            workbook.SheetNames.forEach((sheetName) => {
+                                const sheet = workbook.Sheets[sheetName];
+                                let jsonData: any[] = XLSX.utils.sheet_to_json(sheet, {
+                                    defval: 'not available', // Set default value for empty cells
+                                });
+
+                                console.log(jsonData);
+
+                                // Convert all values to string
+                                jsonData = jsonData.map((row) => {
+                                    const stringRow: { [key: string]: string } = {};
+                                    Object.keys(row).forEach((key) => {
+                                        stringRow[key.toLowerCase()] = row[key].toString();
+                                    });
+                                    return stringRow;
+                                });
+
+                                // Convert headers to lowercase
+                                if (jsonData.length > 0) {
+                                    jsonData = jsonData.map((row) => {
+                                        const lowerCaseRow: { [key: string]: any } = {};
+                                        Object.keys(row).forEach((key) => {
+                                            lowerCaseRow[key.toLowerCase().trim()] = row[key];
+                                        });
+                                        return lowerCaseRow;
+                                    });
+                                }
+
+                                const firstObject = jsonData[0];
+
+                                const lowercaseKeys: { [key: string]: any } = Object.keys(firstObject).reduce((acc: any, key) => {
+                                    acc[key.toLowerCase()] = firstObject[key];
+                                    return acc;
+                                }, {});
+
+                                if (!checkFormat(selectedOpt.selectedHeaders, Object.keys(lowercaseKeys))) {
+                                    setError("File headers not correct. Please use the example table")
+                                    throw new Error;
+                                }
+
+                                const transformedData = jsonData.map((item) => {
+
+                                    const outlet_code = item.outlet_name.substring(0, 4);
+                                    const achievementTarget = Object.keys(item)
+                                        .filter((key) => key !== "outlet_division" && key !== "outlet_format" && key !== "outlet_name")
+                                        .map((date) => ({
+                                            date: getDateFormat(date),
+                                            target: item[date],
+                                            // month: getMonthFromDate(date),
+                                        }));
+
+                                    // Calculate total_target by summing up the target values
+                                    const total_target = achievementTarget.reduce((total, target) => total + parseFloat(target.target) || 0, 0);
+
+                                    // Extract month from the first date in the achievementTarget array
+                                    const month = achievementTarget.length > 0 ? getMonthFromDate(achievementTarget[0].date) : '';
+
+                                    return {
+                                        outlet_division: item.outlet_division,
+                                        outlet_format: item.outlet_format,
+                                        outlet_name: item.outlet_name,
+                                        outlet_code,
+                                        total_target,
+                                        cat_3: sheetName,
+                                        achievement_target: achievementTarget,
+                                        month
+                                    };
+                                });
+
+                                jsonDataArray.push(...transformedData);
+                            });
+
+                            console.log(jsonDataArray);
+                            setData(jsonDataArray);
+                            setFileName(file.name);
+                        } catch (error) {
+                            console.error('Error reading the Excel file:', error);
+                            setLoading(false);
+                            const fileInput: any = document.querySelector(".file");
+                            fileInput.value = "";
+                            setData([]);
+                        } finally {
+                            setLoading(false);
+                        }
+                    };
+
+                    reader.readAsBinaryString(file);
+                } catch (error) {
+                    console.error('Error reading the Excel file:', error);
+                    setLoading(false);
+                    const fileInput: any = document.querySelector(".file");
+                    fileInput.value = "";
+                    setData([]);
+                }
+            }
+
+
+            // every other files
+            if (file && selectedOpt.selectedFileName !== "PNP Achivement") {
                 setLoading(true);
 
                 try {
@@ -154,7 +321,47 @@ const ExcelUploader = () => {
                                 throw new Error
                             }
 
-                            setData(jsonData);
+                            if (selectedOpt.selectedFileName === "Invoice Data") {
+                                console.log(jsonData);
+                                // List of desired Level3 values
+                                const desiredLevel3 = ['beef', 'bird', 'chicken', 'egg', 'fish', 'fruits', 'mutton', 'vegetable'];
+
+                                const groupedData = jsonData.reduce((result, entry) => {
+                                    const outletCode = entry.outletcode;
+                                    const level3 = entry.level3.toLowerCase();
+                                    const nsi = parseFloat(entry.nsi.replace(/^'/, ''));
+                                    const date = entry.date;
+                                    console.log(outletCode, level3, nsi, date);
+                                    if (desiredLevel3.includes(level3)) {
+                                        const existingEntry = result.find(item => item.outlet_code === outletCode && item.cat_3 === level3);
+
+                                        // If entry doesn't exist, create a new one
+                                        if (!existingEntry) {
+                                            result.push({
+                                                outlet_code: outletCode,
+                                                cat_3: level3,
+                                                total_sales: nsi,
+                                                date: getDateFormatExcel(date),
+                                                month: getMonthFormatExcel(date)
+                                            });
+                                        } else {
+                                            // If entry exists, update total sales
+                                            existingEntry.total_sales += nsi;
+                                        }
+                                    }
+                                    // Find existing entry in result array
+
+
+                                    return result;
+                                }, []);
+
+                                console.log(groupedData);
+
+                                setData(groupedData)
+                            } else {
+                                setData(jsonData);
+                            }
+
                             setFileName(file.name);
                         } catch (error) {
                             console.error('Error reading the Excel file:', error);
@@ -198,6 +405,7 @@ const ExcelUploader = () => {
         setData([]);
         if (selectedFormatObject) {
             setSelectedOpt({
+                selectedFileName: selectedFormatObject.name,
                 selectedFileFormat: selectedFormat,
                 selectedHeaders: selectedFormatObject.headers,
                 selectedPath: selectedFormatObject.api_path,
@@ -347,3 +555,5 @@ const ExcelUploader = () => {
 }
 
 export default ExcelUploader
+
+

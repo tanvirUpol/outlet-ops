@@ -1,4 +1,3 @@
-
 "use client"
 import { useState, useEffect, useRef } from 'react';
 import { BsFilterLeft } from 'react-icons/bs';
@@ -13,6 +12,7 @@ const Filter = ({data, setFilteredData}) => {
   // filets
   const [selectedProfitable, setSelectedProfitablet] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState([]);
+  const [selectedZonal, setSelectedZonal] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (event:any) => {
@@ -53,10 +53,19 @@ const Filter = ({data, setFilteredData}) => {
       })
     ),
   ];
+  const uniqueZonal = [
+    ...new Set(
+      data?.map((item) => {
+        return item.zonal;
+      })
+    ),
+  ];
 
   const filteredDataX = data?.filter(
-    (item) => ( (selectedProfitable.length === 0 ||selectedProfitable.includes(item.profitable))
-        && (selectedFormat.length === 0 ||selectedFormat.includes(item.outlet_format)))
+    (item) =>  (selectedProfitable.length === 0 ||selectedProfitable.includes(item.profitable))
+        && (selectedFormat.length === 0 ||selectedFormat.includes(item.outlet_format))
+        && (selectedZonal.length === 0 ||selectedZonal.includes(item.zonal))
+
       // return selectedFormat.length === 0 ||selectedFormat.includes(item.outlet_format)    
   );
 
@@ -74,7 +83,7 @@ const Filter = ({data, setFilteredData}) => {
   useEffect(() => {
    setFilteredData(filteredDataX)
    console.log(filteredDataX);
-  }, [selectedProfitable,selectedFormat])
+  }, [selectedProfitable,selectedFormat,selectedZonal])
   
 
 
@@ -94,12 +103,13 @@ const Filter = ({data, setFilteredData}) => {
 
       <div
         ref={filterRef}
-        className={`filter-bar fixed top-0 right-0 w-60 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
+        className={`filter-bar fixed top-0 right-0 w-72 bg-white shadow-md transform transition-transform duration-300 ease-in-out ${
           isFilterVisible ? 'translate-x-0' : 'translate-x-full'
         } z-20 p-4`}
       >
         <DropDownFilter options={uniqueProfitable} screen={"mobile"} setSelectedValue={setSelectedProfitablet} selectedValue={selectedProfitable} title={"Profitable"} />
         <DropDownFilter options={uniqueFormat} screen={"mobile"} setSelectedValue={setSelectedFormat} selectedValue={selectedFormat} title={"Format"} />
+        <DropDownFilter options={uniqueZonal} screen={"mobile"} setSelectedValue={setSelectedZonal} selectedValue={selectedZonal} title={"Zonal"} />
         {/* Your filter content goes here */}
         <p className="p-4 h-screen"></p>
       </div>

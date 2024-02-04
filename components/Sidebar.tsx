@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 
+
 // icons
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import { RxDashboard } from "react-icons/rx";
@@ -8,6 +9,7 @@ import { TbTargetArrow } from "react-icons/tb";
 import { CiSettings } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 import { FiUploadCloud } from "react-icons/fi";
+import { GrTrophy } from "react-icons/gr";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { RiMapPinLine } from "react-icons/ri";
 import Image from 'next/image';
@@ -58,6 +60,12 @@ const Sidebar = () => {
             text: "Upload",
             icon: FiUploadCloud,
             path: "/upload",
+            access: ["admin"]
+        },
+        {
+            text: "Achievement",
+            icon: GrTrophy,
+            path: "/achievement",
             access: ["admin"]
         },
     ]

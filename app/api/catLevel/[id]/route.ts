@@ -10,9 +10,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     try {
         const { id } = params;
         await connectMongoDB();
+
+        console.log(id);
         
         const keyStoreData = await keyStoreModel.find({ outlet_code: id }).lean();
         const catLevelData = await catLevelModel.find({ outlet_code: id }).lean();
+
+        console.log(keyStoreData[0],catLevelData[0]);
 
         if (catLevelData.length === 0 || keyStoreData.length === 0) {
             throw new Error('No data found for the given ID');
@@ -40,9 +44,12 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         const benchStorecatLevelData = await catLevelModel.find({ outlet_code: benchStore[0].outlet_code }).lean();
         // console.log(benchStorecatLevelData[0]);
 
+        console.log(benchStore);
+
         return NextResponse.json({outletData: updatedA, benchOutletData: benchStorecatLevelData})
 
     } catch (error) {
+        console.log(error);
         return NextResponse.json({message: "An error occurred while getting the data!."}, {status: 500})
     }
 }

@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import toast, { Toaster } from 'react-hot-toast';
+import { signIn } from "next-auth/react";
 
 // import { signIn } from "next-auth/react"
 
@@ -27,45 +28,66 @@ const LoginForm = () => {
       return
     }
 
-
     try {
-      console.log(email, password);
-      const res = await fetch("api/login", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
+
+      const res  = await signIn("credentials", {
+        email: email,
+        password: password,
+        redirect: false
       })
 
-      const json = await res.json()
-      // console.log(json);
-
-      if (res.ok) {
-        console.log("Logged in!");
-        console.log(json);
-        // Save the user data in localStorage
-        localStorage.setItem('user', JSON.stringify(json))
-        setEmail("")
-        setPassword("")
-        setError("")
+      if(res?.error){
+        setError("Invalid username or password")
         setLoading(false)
-        router.push('/verify', { scroll: false })
-
-      } else {
-        console.log("submission failed");
-        toast.error('Login Attempt Failed!')
-        setLoading(false)
-        // setEmail("")
-        // setError("")
-        setError(json.message)
+        return
       }
 
-    } catch (error) {
-      console.log("registration failed with:", error);
+      router.replace("dashboard")
       setLoading(false)
-
+      
+    } catch (error) {
+      setLoading(false)
     }
+
+
+    // try {
+    //   console.log(email, password);
+    //   const res = await fetch("api/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-type": "application/json"
+    //     },
+    //     body: JSON.stringify({ email, password })
+    //   })
+
+    //   const json = await res.json()
+    //   // console.log(json);
+
+    //   if (res.ok) {
+    //     console.log("Logged in!");
+    //     console.log(json);
+    //     // Save the user data in localStorage
+    //     localStorage.setItem('user', JSON.stringify(json))
+    //     setEmail("")
+    //     setPassword("")
+    //     setError("")
+    //     setLoading(false)
+    //     router.push('/verify', { scroll: false })
+
+    //   } else {
+    //     console.log("submission failed");
+    //     toast.error('Login Attempt Failed!')
+    //     setLoading(false)
+    //     // setEmail("")
+    //     // setError("")
+    //     setError(json.message)
+    //   }
+
+    // } catch (error) {
+    //   console.log("registration failed with:", error);
+    //   setLoading(false)
+
+    // }
   }
 
   return (

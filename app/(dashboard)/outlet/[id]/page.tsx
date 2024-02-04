@@ -15,6 +15,8 @@ export async function generateStaticParams() {
 
 async function getData(id: string) {
 
+    console.log(id);
+
     const res = await fetch(process.env.NEXTAUTH_URL + `/api/catLevel/${id.toUpperCase()}`, {
         next: {
             revalidate: 60
