@@ -80,13 +80,17 @@ export async function POST(req) {
 export async function GET(req) {
     // const session = await getServerSession(authOptions)
     // console.log(process.env.NEXTAUTH_SECRET );
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    await connectMongoDB();
 
-    if(token.role === "admin"){
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+    // console.log(token);
+
+    await connectMongoDB();
+    
+    if(token.role === "admin" || token.role === "pnp admin"){
         const storeLevelData = await storeLevelModel.find().lean();
         return NextResponse.json(storeLevelData);
-    }else if(token.role === "zonal") {
+    }else if(token.role === "zonal" || token.role === "pnp user") {
         const zonalOutlet =  await UserSchemaModel.findOne({ email: token.email }).select('outlets')
         // console.log(zonalOutlet);
         const storeLevelData = await storeLevelModel.find({outlet_code:{ $in: zonalOutlet.outlets}}).lean();

@@ -99,3 +99,22 @@ input {
           scrollbar-width: none;  /* Firefox */
     }
   }
+
+  .activeB {
+    border-color: #478ffa;
+    background-color: #334155;
+    margin: 4px;
+    border-radius: 5px;
+    color: white;
+    /* background-color: azure; */
+  }
+  .inactiveB {
+    background-color: #f1f1f1;
+    border: 2px solid #334155;
+    margin: 4px;
+    border-radius: 5px;
+  }
+
+  .activeDropdown{
+    background-color: #f2f2f2;
+  }

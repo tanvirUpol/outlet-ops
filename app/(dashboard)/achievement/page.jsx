@@ -1,8 +1,6 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import {
   Select,
   SelectContent,
@@ -18,13 +16,14 @@ import { CiSquarePlus } from "react-icons/ci";
 import { CiSquareMinus } from "react-icons/ci";
 import { numFor } from '@/utility';
 import SearchBar from '@/components/SearchBar';
+import { useSession } from 'next-auth/react';
 
 
-const formatMonth = (date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // Note: getMonth() returns 0-based index
-  return `${year}-${month}`;
-};
+// const formatMonth = (date) => {
+//   const year = date.getFullYear();
+//   const month = date.getMonth() + 1; // Note: getMonth() returns 0-based index
+//   return `${year}-${month}`;
+// };
 
 
 
@@ -35,6 +34,8 @@ const page = () => {
     const formattedMonth = currentDate.toISOString().slice(0, 7); // Extracts the year-month part
     return formattedMonth;
   });
+  const [startDate, setStartDate] = useState()
+  const [endDate, setEndDate] = useState()
   const [data, setData] = useState([]);
   const [invoiceData, setInvoiceData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,50 @@ const page = () => {
   const [collapsedRows, setCollapsedRows] = useState([]);
   const [type, setType] = useState("all")
   const [searchResults, setSearchResults] = useState([]);
+  const [activeTab, setActiveTab] = useState('historical'); // Initial active tab
+  const { data: session } = useSession()
+
+
+  useEffect(() => {
+    // Get the current date
+    const currentDate = new Date();
+
+    // Set the start date to the first day of the current month in Bangladesh timezone
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    setStartDate(formatDate2(startOfMonth));
+
+    // Set the end date to the last day of the current month in Bangladesh timezone
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    setEndDate(formatDate2(lastDayOfMonth));
+  }, []); // The empty dependency array ensures that this effect runs only once on component mount
+
+  // Function to format the date as 'YYYY-MM-DD'
+  const formatDate2 = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+
+  useEffect(() => {
+    console.log(startDate,endDate);
+  }, [startDate,endDate])
+  
+ 
+  const handleTabClick = (tab) => {
+    // Get the current date
+    const currentDate = new Date();
+
+    // Set the start date to the first day of the current month in Bangladesh timezone
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    setStartDate(formatDate2(startOfMonth));
+
+    // Set the end date to the last day of the current month in Bangladesh timezone
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    setEndDate(formatDate2(lastDayOfMonth));
+    setActiveTab(tab);
+  };
 
   const findTotalSales = (outletCode, category, date) => {
     // console.log(outletCode, category, date);
@@ -86,7 +131,7 @@ const page = () => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
 
-    
+
   }
 
 
@@ -139,14 +184,66 @@ const page = () => {
     console.log(totalSalesSum);
     return totalSalesSum;
   };
-  
-  function flipDate(date){
+
+  function flipDate(date) {
     const [day, month, year] = date.split("-");
-      return (`${year}-${month}-${day}`) 
+    return (`${year}-${month}-${day}`)
   }
+
+  const findHighestDate = () => {
+    if (data.length === 0) {
+      return null; // Return null for empty data array
+    }
+
+    const dateObjects = invoiceData.map(item => {
+      const [day, month, year] = item.date.split('-');
+      return new Date(`${year}-${month}-${day}`);
+    });
+
+    return new Date(Math.max(...dateObjects));
+
+  };
+
+  function getBreakingPoint(date) {
+    const targetDate = new Date(flipDate(date));
+    const breakDate = findHighestDate();
+    return targetDate <= breakDate;
+  }
+
+  function checkStartDate(date) {
+    const targetDate = new Date(flipDate(date));
+    
+    // Extracting year, month, and day from startDate
+    const startDateObject = new Date(startDate);
+    const startYear = startDateObject.getFullYear();
+    const startMonth = startDateObject.getMonth();
+    const startDay = startDateObject.getDate();
+  
+    // Creating a new Date object with the same year, month, and day but with time set to midnight
+    const adjustedStartDate = new Date(startYear, startMonth, startDay, 0, 0, 0, 0);
+  
+    return targetDate >= adjustedStartDate;
+  }
+
+  function checkEndDate(date) {
+    const targetDate = new Date(flipDate(date));
+    
+    // Extracting year, month, and day from endDate
+    const endDateObject = new Date(endDate);
+    const endYear = endDateObject.getFullYear();
+    const endMonth = endDateObject.getMonth();
+    const endDay = endDateObject.getDate();
+  
+    // Creating a new Date object with the same year, month, and day but with time set to midnight
+    const adjustedEndDate = new Date(endYear, endMonth, endDay, 0, 0, 0, 0);
+  
+    return targetDate <= adjustedEndDate;
+  }
+  
 
 
   function getTotalTargetUntilYesterday(data) {
+
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
@@ -163,21 +260,54 @@ const page = () => {
 
     for (const target of achievementTargets) {
       const targetDate = new Date(flipDate(target.date));
-      const yesterdayDate = new Date(flipDate(formattedYesterday));
+      const yesterdayDate = findHighestDate();
       // console.log(target);
       // console.log(targetDate);
       // console.log(yesterdayDate);
 
       if (targetDate <= yesterdayDate) {
-          // console.log("hello");
-          totalTargetUntilYesterday += target.target;
+        // console.log("hello");
+        totalTargetUntilYesterday += target.target;
       }
     }
 
     console.log(totalTargetUntilYesterday);
 
     return totalTargetUntilYesterday;
-}
+  }
+
+  // function getTotalTargetUntilYesterday(data) {
+  //   const today = new Date();
+  //   const yesterday = new Date(today);
+  //   yesterday.setDate(yesterday.getDate() - 1);
+
+  //   const formattedYesterday = formatDate(yesterday);
+
+  //   // console.log(formattedYesterday);
+
+  //   const achievementTargets = data.achievement_target;
+
+  //   // console.log(achievementTargets);
+
+  //   let totalTargetUntilYesterday = 0;
+
+  //   for (const target of achievementTargets) {
+  //     const targetDate = new Date(flipDate(target.date));
+  //     const yesterdayDate = new Date(flipDate(formattedYesterday));
+  //     // console.log(target);
+  //     // console.log(targetDate);
+  //     // console.log(yesterdayDate);
+
+  //     if (targetDate <= yesterdayDate) {
+  //       // console.log("hello");
+  //       totalTargetUntilYesterday += target.target;
+  //     }
+  //   }
+
+  //   console.log(totalTargetUntilYesterday);
+
+  //   return totalTargetUntilYesterday;
+  // }
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
@@ -232,7 +362,9 @@ const page = () => {
 
   const sortedOutlets = (searchResults.length > 0 ? searchResults : data)
 
-  // console.log(selectedMonth);
+  // console.log(session?.user);
+  console.log();
+  console.log();
 
   return (
     <div className="w-full p-4 ">
@@ -249,11 +381,6 @@ const page = () => {
                 type='month'
                 value={selectedMonth}
                 onChange={(event) => setSelectedMonth(event.target.value)}
-              // showIcon
-              // dateFormat="yyyy-MM"
-              // icon={<MdOutlineDateRange className="w-6 h-6"/>}
-              // showMonthYearPicker
-              // className="border border-gray-300"
               />
             </div>
           </div>
@@ -301,7 +428,7 @@ const page = () => {
               {sortedOutlets?.map((item, index) => (
                 <React.Fragment key={index}>
                   {/* {console.log(item.cat_3.toLowerCase())} */}
-                  {(item?.cat_3.toLowerCase() == type || type === "all") && <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
+                  {session?.user?.outlets.includes(item.outlet_code) && (item?.cat_3.toLowerCase() == type || type === "all") && <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
                     <td className="py-3 px-4 border-b">
                       <div className='flex items-center justify-start gap-2'>
                         <div>
@@ -318,9 +445,28 @@ const page = () => {
                     <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(item.total_target), sumTotalSales(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td>
                   </tr>}
                   {collapsedRows[index] && (
-                    <tr className='transition-all'>
-                      <td colSpan="5" className="border-b">
-                        <div className='flex  justify-between p-4 gap-2 bg-slate-50'>
+                    <tr className={`${collapsedRows[index] ? "activeDropdown" : ""}`}>
+                      <td colSpan="5" className="border-b m-2">
+                        <div className='flex px-4 mt-2 gap-3'>
+                          <div className='flex items-center gap-2 bg'>
+                            <h1 className="text-sm font-medium">From</h1>
+                            <input
+                              type='date'
+                              value={startDate}
+                              onChange={(e) => setStartDate(e.target.value)}
+                            />
+                          </div>
+                          <div className='flex items-center gap-2'>
+                            <h1 className="text-sm font-medium">To</h1>
+                            <input
+                              type='date'
+                              value={endDate}
+                              onChange={(e) => setEndDate(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <div className='flex  justify-between p-4 gap-2 '>
+
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
                             <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Historical Target Achived</h5>
@@ -329,7 +475,7 @@ const page = () => {
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
                             <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Todays Target</h5>
-                            <p className=" text-gray-700 text-xl font-medium">{ Math.ceil(getTodaysTarget(item))}</p>
+                            <p className=" text-gray-700 text-xl font-medium">{Math.ceil(getTodaysTarget(item))}</p>
                           </div>
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-xl shadow hover:bg-gray-100 ">
 
@@ -337,6 +483,26 @@ const page = () => {
                             <p className=" text-gray-700 text-lg font-medium">{Math.ceil(getTomorrowsTarget(item))}</p>
                           </div>
                         </div>
+
+                        {/* tabs */}
+                        <div className='flex justify-between gap-1 w-full'>
+                          <p
+                            className={`w-full p-3 text-base  font-medium text-center  cursor-pointer ${activeTab === 'historical' ? 'activeB' : 'inactiveB'
+                              }`}
+                            onClick={() => handleTabClick('historical')}
+                          >
+                            Historical Data
+                          </p>
+                          <p
+                            className={`w-full p-3 text-base  font-medium text-center cursor-pointer ${activeTab === 'future' ? 'activeB' : 'inactiveB'
+                              }`}
+                            onClick={() => handleTabClick('future')}
+                          >
+                            Future Data
+                          </p>
+                        </div>
+
+
                         <table className="w-full">
                           <thead>
                             <tr className="bg-slate-700">
@@ -346,14 +512,22 @@ const page = () => {
                               <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200 bg-white">
+                          <tbody className="divide-y divide-gray-200 bg-salte-50">
                             {item.achievement_target.map((target, index) => (
-                              <tr key={index}>
-                                <td className="py-3 px-4 border-b">{target.date}</td>
-                                <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
-                                <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
-                                <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
-                              </tr>
+                              <React.Fragment key={index}>
+                                {activeTab === 'historical' && getBreakingPoint(target.date) && checkStartDate(target.date)  && checkEndDate(target.date) &&  <tr className='font-medium'>
+                                  <td className="py-3 px-4 border-b">{new Date(flipDate(target.date)).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}</td>
+                                  <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
+                                  <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
+                                  <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
+                                </tr>}
+                                {activeTab === 'future' && !getBreakingPoint(target.date) && checkStartDate(target.date)  && checkEndDate(target.date) && <tr>
+                                  <td className="py-3 px-4 border-b">{new Date(flipDate(target.date)).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}</td>
+                                  <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
+                                  <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
+                                  <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
+                                </tr>}
+                              </React.Fragment>
                             ))}
                           </tbody>
                         </table>

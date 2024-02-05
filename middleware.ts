@@ -16,6 +16,18 @@ export default withAuth(
                 new URL("/dashboard", request.url)
             )
         }
+        if (request.nextUrl.pathname.startsWith("/dashboard")
+            && (request.nextauth.token.role === "pnp admin" || request.nextauth.token.role === "pnp user")) {
+            return NextResponse.redirect(
+                new URL("/achievement", request.url)
+            )
+        }
+
+        // if (request.nextauth.token?.role !== "PNP Admin") {
+        //     return NextResponse.redirect(
+        //         new URL("/achievement", request.url)
+        //     )
+        // }
 
         // if (request.nextUrl.pathname.startsWith("/client")
         //     && request.nextauth.token?.role !== "admin"
@@ -33,4 +45,4 @@ export default withAuth(
 )
 
 
-export const config = {matcher: ["/settings","/dashboard","/target","/map","/upload" , "/outlet/:id*"]}
+export const config = { matcher: ["/settings", "/dashboard", "/target", "/map", "/upload", "/outlet/:id*", "/achievement"] }

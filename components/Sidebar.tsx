@@ -66,7 +66,7 @@ const Sidebar = () => {
             text: "Achievement",
             icon: GrTrophy,
             path: "/achievement",
-            access: ["admin"]
+            access: ["admin", "pnp admin", "pnp user"]
         },
     ]
 
