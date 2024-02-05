@@ -19,39 +19,13 @@ import { CiSquareMinus } from "react-icons/ci";
 import { numFor } from '@/utility';
 import SearchBar from '@/components/SearchBar';
 
-// async function getData() {
 
-//   const res = await fetch(process.env.NEXTAUTH_URL + `/api/achivement/2024-2`, {
-//       next: {
-//           revalidate: 60
-//       }
-//   })
-
-//   if (!res.ok) {
-//       notFound()
-//   }
-
-//   return res.json()
-// }
 const formatMonth = (date) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1; // Note: getMonth() returns 0-based index
   return `${year}-${month}`;
 };
 
-
-function calculateAchievementPercentage(target, achieved) {
-  if (target <= 0) {
-    throw new Error("Target value must be greater than zero");
-  }
-
-  if (achieved < 0) {
-    throw new Error("Achieved value cannot be negative");
-  }
-
-  const percentage = (achieved / target) * 100;
-  return Math.min(100, percentage); // Ensure the percentage does not exceed 100%
-}
 
 
 
@@ -70,7 +44,7 @@ const page = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const findTotalSales = (outletCode, category, date) => {
-    console.log(outletCode, category, date);
+    // console.log(outletCode, category, date);
     const result = invoiceData.find(item =>
       item.outlet_code === outletCode &&
       item.cat_3.toLowerCase() === category.toLowerCase() &&
@@ -97,51 +71,113 @@ const page = () => {
     const today = new Date();
     const formattedToday = formatDate(today);
     return getTargetByDate(data, formattedToday).toFixed(2);
-}
+  }
 
-function getTomorrowsTarget(data) {
+  function getTomorrowsTarget(data) {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const formattedTomorrow = formatDate(tomorrow);
     return getTargetByDate(data, formattedTomorrow).toFixed(2);
-}
-
-function formatDate(date) {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
-}
-
-
-function getTargetByDate(data, targetDate) {
-  const achievementTargets = data.achievement_target;
-  
-  for (const target of achievementTargets) {
-      if (target.date === targetDate) {
-          return target.target;
-      }
   }
 
-  // If the date is not found, you may want to handle it accordingly (return a default value or throw an error)
-  return null;
+  function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+
+    
+  }
+
+
+  function getTargetByDate(data, targetDate) {
+    const achievementTargets = data.achievement_target;
+
+    for (const target of achievementTargets) {
+      if (target.date === targetDate) {
+        return target.target;
+      }
+    }
+
+    // If the date is not found, you may want to handle it accordingly (return a default value or throw an error)
+    return null;
+  }
+
+
+  function calculateAchievementPercentage(target, achieved) {
+    // console.log(target, achieved);
+    if (target <= 0) {
+      throw new Error("Target value must be greater than zero");
+    }
+
+    if (achieved < 0) {
+      throw new Error("Achieved value cannot be negative");
+    }
+
+    const percentage = (achieved / target) * 100;
+    return Math.min(100, percentage); // Ensure the percentage does not exceed 100%
+  }
+
+
+
+  const sumTotalSalesTillYesterday = (outletCode, category) => {
+    const today = new Date();
+
+    const filteredItems = invoiceData.filter(item => {
+      const [day, month, year] = item.date.split("-");
+      return (
+        item.outlet_code === outletCode &&
+        item.cat_3.toLowerCase() === category.toLowerCase() &&
+        new Date(`${year}-${month}-${day}`) < today)
+    }
+
+    );
+
+    console.log(filteredItems);
+
+    const totalSalesSum = filteredItems.reduce((sum, item) => sum + item.total_sales, 0);
+    console.log(totalSalesSum);
+    return totalSalesSum;
+  };
+  
+  function flipDate(date){
+    const [day, month, year] = date.split("-");
+      return (`${year}-${month}-${day}`) 
+  }
+
+
+  function getTotalTargetUntilYesterday(data) {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const formattedYesterday = formatDate(yesterday);
+
+    // console.log(formattedYesterday);
+
+    const achievementTargets = data.achievement_target;
+
+    // console.log(achievementTargets);
+
+    let totalTargetUntilYesterday = 0;
+
+    for (const target of achievementTargets) {
+      const targetDate = new Date(flipDate(target.date));
+      const yesterdayDate = new Date(flipDate(formattedYesterday));
+      // console.log(target);
+      // console.log(targetDate);
+      // console.log(yesterdayDate);
+
+      if (targetDate <= yesterdayDate) {
+          // console.log("hello");
+          totalTargetUntilYesterday += target.target;
+      }
+    }
+
+    console.log(totalTargetUntilYesterday);
+
+    return totalTargetUntilYesterday;
 }
-
-  // const sumTotalSalesTillYesterday = (outletCode, category) => {
-  //   const today = new Date();
-  //   today.setHours(0, 0, 0, 0);
-  
-  //   const filteredItems = invoiceData.filter(item =>
-  //     item.outlet_code === outletCode &&
-  //     item.cat_3.toLowerCase() === category.toLowerCase() &&
-  //     new Date(item.date) < today
-  //   );
-  
-  //   const totalSalesSum = filteredItems.reduce((sum, item) => sum + item.total_sales, 0);
-  
-  //   return totalSalesSum;
-  // };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
@@ -196,7 +232,7 @@ function getTargetByDate(data, targetDate) {
 
   const sortedOutlets = (searchResults.length > 0 ? searchResults : data)
 
-  console.log(selectedMonth);
+  // console.log(selectedMonth);
 
   return (
     <div className="w-full p-4 ">
@@ -261,7 +297,7 @@ function getTargetByDate(data, targetDate) {
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y text-sm divide-gray-200 bg-white">
               {sortedOutlets?.map((item, index) => (
                 <React.Fragment key={index}>
                   {/* {console.log(item.cat_3.toLowerCase())} */}
@@ -270,35 +306,35 @@ function getTargetByDate(data, targetDate) {
                       <div className='flex items-center justify-start gap-2'>
                         <div>
 
-                        {collapsedRows[index] ? <CiSquareMinus className="w-6 h-6" /> : <CiSquarePlus className="w-6 h-6" />}
+                          {collapsedRows[index] ? <CiSquareMinus className="w-6 h-6" /> : <CiSquarePlus className="w-6 h-6" />}
                         </div>
                         <p>{item.outlet_name}</p>
                       </div>
                     </td>
                     {/* <td className="py-3 px-4 border-b">{item.month}</td> */}
                     <td className="py-3 px-4 border-b">{item.cat_3}</td>
-                    <td className="py-3 px-4 border-b">{numFor.format(parseFloat(item.total_target))}</td>
-                    <td className="py-3 px-4 border-b">{numFor.format(sumTotalSales(item.outlet_code, item.cat_3))}</td>
+                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(item.total_target)))}</td>
+                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(sumTotalSales(item.outlet_code, item.cat_3)))}</td>
                     <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(item.total_target), sumTotalSales(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td>
                   </tr>}
                   {collapsedRows[index] && (
                     <tr className='transition-all'>
                       <td colSpan="5" className="border-b">
-                        <div className='flex items-center justify-between p-4 gap-2 bg-slate-50'>
+                        <div className='flex  justify-between p-4 gap-2 bg-slate-50'>
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
-                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">Historical Target Achived</h5>
-                            <p className=" text-gray-700 text-lg font-medium">{calculateAchievementPercentage(parseFloat(item.total_target), sumTotalSales(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</p>
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Historical Target Achived</h5>
+                            <p className=" text-gray-700 text-xl font-medium">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item, item.cat_3), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</p>
                           </div>
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
-                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">Todays Target Achived</h5>
-                            <p className=" text-gray-700 text-lg font-medium">{getTodaysTarget(item)}</p>
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Todays Target</h5>
+                            <p className=" text-gray-700 text-xl font-medium">{ Math.ceil(getTodaysTarget(item))}</p>
                           </div>
-                          <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
+                          <div className="block w-full p-6 bg-white border border-gray-200 rounded-xl shadow hover:bg-gray-100 ">
 
-                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">Tomorrows Target Achived</h5>
-                            <p className=" text-gray-700 text-lg font-medium">{getTomorrowsTarget(item)}</p>
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Tomorrows Target</h5>
+                            <p className=" text-gray-700 text-lg font-medium">{Math.ceil(getTomorrowsTarget(item))}</p>
                           </div>
                         </div>
                         <table className="w-full">
@@ -314,8 +350,8 @@ function getTargetByDate(data, targetDate) {
                             {item.achievement_target.map((target, index) => (
                               <tr key={index}>
                                 <td className="py-3 px-4 border-b">{target.date}</td>
-                                <td className="py-3 px-4 border-b">{numFor.format(parseFloat(target.target))}</td>
-                                <td className="py-3 px-4 border-b">{numFor.format(parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))}</td>
+                                <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
+                                <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
                                 <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
                               </tr>
                             ))}

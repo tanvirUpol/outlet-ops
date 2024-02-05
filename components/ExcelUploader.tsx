@@ -116,7 +116,7 @@ const ExcelUploader = () => {
         },
         {
             name: "Invoice Data",
-            headers: [],
+            headers: ["date"],
             api_path: "api/invoice"
         },
         // {
