@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import { GrTrophy } from "react-icons/gr";
+
 import {
   Select,
   SelectContent,
@@ -17,7 +19,7 @@ import { CiSquareMinus } from "react-icons/ci";
 import { numFor } from '@/utility';
 import SearchBar from '@/components/SearchBar';
 import { useSession } from 'next-auth/react';
-
+import { CgSpinnerTwo } from "react-icons/cg";
 
 // const formatMonth = (date) => {
 //   const year = date.getFullYear();
@@ -44,6 +46,7 @@ const page = () => {
   const [type, setType] = useState("all")
   const [searchResults, setSearchResults] = useState([]);
   const [activeTab, setActiveTab] = useState('historical'); // Initial active tab
+  
   const { data: session } = useSession()
 
 
@@ -363,13 +366,12 @@ const page = () => {
   const sortedOutlets = (searchResults.length > 0 ? searchResults : data)
 
   // console.log(session?.user);
-  console.log();
-  console.log();
+
 
   return (
-    <div className="w-full p-4 ">
+    <div className="w-full p-4 mb-4">
       <div className="flex items-center gap-2 mb-4 text-gray-800">
-        <RiUploadCloud2Line className="w-6 h-6" />
+        <GrTrophy className="w-6 h-6" />
         <h1 className="text-2xl font-bold">Store PNP Achievements</h1>
       </div>
       <div className="w-full">
@@ -410,7 +412,10 @@ const page = () => {
         </div>
         {/* Month Picker */}
 
-        {loading && <p className="text-gray-600">Loading...</p>}
+        {loading && 
+        <div className="text-gray-600 flex justify-center items-center w-full text-center h-[72dvh]">
+          <CgSpinnerTwo className="w-40 h-40 animate-spin" />
+        </div>}
         {error && <p className="text-red-500">{error}</p>}
         {sortedOutlets.length > 0 && (
           <table className=" table-fixed w-[768px] md:w-full shadow-sm rounded border">
@@ -428,11 +433,10 @@ const page = () => {
               {sortedOutlets?.map((item, index) => (
                 <React.Fragment key={index}>
                   {/* {console.log(item.cat_3.toLowerCase())} */}
-                  {session?.user?.outlets.includes(item.outlet_code) && (item?.cat_3.toLowerCase() == type || type === "all") && <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
+                  {(session?.user?.outlets.includes(item.outlet_code) || session?.user?.outlets.length === 0 )&& (item?.cat_3.toLowerCase() == type || type === "all") && <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
                     <td className="py-3 px-4 border-b">
                       <div className='flex items-center justify-start gap-2'>
                         <div>
-
                           {collapsedRows[index] ? <CiSquareMinus className="w-6 h-6" /> : <CiSquarePlus className="w-6 h-6" />}
                         </div>
                         <p>{item.outlet_name}</p>
@@ -477,7 +481,7 @@ const page = () => {
                             <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Todays Target</h5>
                             <p className=" text-gray-700 text-xl font-medium">{Math.ceil(getTodaysTarget(item))}</p>
                           </div>
-                          <div className="block w-full p-6 bg-white border border-gray-200 rounded-xl shadow hover:bg-gray-100 ">
+                          <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
                             <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Tomorrows Target</h5>
                             <p className=" text-gray-700 text-lg font-medium">{Math.ceil(getTomorrowsTarget(item))}</p>
@@ -487,14 +491,14 @@ const page = () => {
                         {/* tabs */}
                         <div className='flex justify-between gap-1 w-full'>
                           <p
-                            className={`w-full p-3 text-base  font-medium text-center  cursor-pointer ${activeTab === 'historical' ? 'activeB' : 'inactiveB'
+                            className={`w-full p-3 text-base  font-medium text-center  cursor-pointer ${activeTab === 'historical' ? 'activeB-left' : 'inactiveB'
                               }`}
                             onClick={() => handleTabClick('historical')}
                           >
                             Historical Data
                           </p>
                           <p
-                            className={`w-full p-3 text-base  font-medium text-center cursor-pointer ${activeTab === 'future' ? 'activeB' : 'inactiveB'
+                            className={`w-full p-3 text-base  font-medium text-center cursor-pointer ${activeTab === 'future' ? 'activeB-right' : 'inactiveB'
                               }`}
                             onClick={() => handleTabClick('future')}
                           >
@@ -503,16 +507,16 @@ const page = () => {
                         </div>
 
 
-                        <table className="w-full">
+                        <table className="w-full table-fixed">
                           <thead>
                             <tr className="bg-slate-700">
-                              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Date</th>
-                              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Target</th>
-                              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived</th>
-                              <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Date</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Target</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200 bg-salte-50">
+                          <tbody className="divide-y divide-gray-200 bg-salte-50 font-medium">
                             {item.achievement_target.map((target, index) => (
                               <React.Fragment key={index}>
                                 {activeTab === 'historical' && getBreakingPoint(target.date) && checkStartDate(target.date)  && checkEndDate(target.date) &&  <tr className='font-medium'>

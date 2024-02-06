@@ -55,11 +55,12 @@ const ResetPassword = () => {
 
               } else {
                 console.log("submission failed");
-                toast.error('Login Attempt Failed!')
+                toast.error('Failed! to change pass')
                 setLoading(false)
                 // setEmail("")
                 // setError("")
-                setError(json.message)
+                // setError(json.message)
+                setError("Invalid email or email")
               }
 
         } catch (error) {
@@ -69,7 +70,7 @@ const ResetPassword = () => {
         }
     }
     return (
-        <div className="grid place-items-center h-[80dvh] container">
+        <div className="grid">
             <div className="shadow-md p-5 rounded-lg border-t-4 border-slate-700 w-[300px] sm:w-[500px]">
                 <h1 className="text-xl font-bold my-4" >Reset Your Password</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">

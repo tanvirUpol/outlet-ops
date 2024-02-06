@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
 
             const hashedPassword = await bcrypt.hash(newPassword, 10)
          
-            // const updatedUser = await UserSchemaModel.findOneAndUpdate({email}, {password: hashedPassword}, {
-            //     new: true, // Return the modified document rather than the original
-            //     projection: '_id email', // Specify the fields to return in the result
-            // });
+            const updatedUser = await UserSchemaModel.findOneAndUpdate({email}, {password: hashedPassword}, {
+                new: true, // Return the modified document rather than the original
+                projection: '_id email', // Specify the fields to return in the result
+            });
             // return NextResponse.json({ message:`Password changed successfully!`, email:updatedUser.email }, { status: 200 })
             return NextResponse.json({ message:`Password changed successfully!` }, { status: 200 })
         }

@@ -100,19 +100,33 @@ input {
     }
   }
 
-  .activeB {
+  .activeB-left {
     border-color: #478ffa;
     background-color: #334155;
-    margin: 4px;
-    border-radius: 5px;
+    margin-top: 4px;
+    /* margin-bottom: 0px; */
+    border-radius: 0px 15px 0px 0px;
     color: white;
     /* background-color: azure; */
   }
+
+
+  .activeB-right {
+    border-color: #478ffa;
+    background-color: #334155;
+    margin-top: 4px;
+    /* margin-bottom: 0px; */
+    border-radius: 15px 0px 0px 0px;
+    color: white;
+    /* background-color: azure; */
+  }
+
   .inactiveB {
     background-color: #f1f1f1;
-    border: 2px solid #334155;
-    margin: 4px;
-    border-radius: 5px;
+    /* border: 2px solid #334155; */
+    margin-top: 4px;
+    /* margin-bottom: 0px; */
+    border-radius: 0px 15px 0px 0px;
   }
 
   .activeDropdown{

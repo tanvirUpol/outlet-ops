@@ -32,7 +32,7 @@ const Target = async () => {
 
   
   return (
-    <div className="flex-1 p-4 "> {/* Add ml-16 for the margin */}
+    <div className="w-full p-4 "> {/* Add ml-16 for the margin */}
         {/* Your main content goes here */}
         <div className="flex items-center gap-2 mb-4 text-gray-800">
           <PiTargetDuotone className="w-6 h-6" />
