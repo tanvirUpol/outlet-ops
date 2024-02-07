@@ -427,13 +427,9 @@ const page = () => {
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Total Target</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Total Target</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Achived</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Achived %</th>
-               
               </tr>
             </thead>
-            <tbody className="divide-y text-xs divide-gray-200 bg-white">
+            <tbody className="divide-y text-sm divide-gray-200 bg-white">
               {sortedOutlets?.map((item, index) => (
                 <React.Fragment key={index}>
                   {/* {console.log(item.cat_3.toLowerCase())} */}
@@ -451,13 +447,10 @@ const page = () => {
                     <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(item.total_target)))}</td>
                     <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(sumTotalSales(item.outlet_code, item.cat_3)))}</td>
                     <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(item.total_target), sumTotalSales(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td>
-                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(getTotalTargetUntilYesterday(item, item.cat_3)))}</td>
-                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)))}</td>
-                    <td className="py-3 px-4 border-b">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item, item.cat_3), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2)+"%"}</td>
                   </tr>}
                   {collapsedRows[index] && (
                     <tr className={`${collapsedRows[index] ? "activeDropdown" : ""}`}>
-                      <td colSpan="8" className="border-b m-2">
+                      <td colSpan="5" className="border-b m-2">
                         <div className='flex px-4 mt-2 gap-3'>
                           <div className='flex items-center gap-2 bg'>
                             <h1 className="text-sm font-medium">From</h1>
