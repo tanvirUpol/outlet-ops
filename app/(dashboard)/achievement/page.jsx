@@ -356,6 +356,12 @@ const page = () => {
   };
 
 
+  const handleType = (e) => {
+    setCollapsedRows([])
+    setType(e)
+  }
+
+
   const handleSearch = (query) => {
     const results = data.filter((outlet) =>
       outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) || outlet.outlet_name.toLowerCase().includes(query.toLowerCase())
@@ -375,7 +381,7 @@ const page = () => {
         <h1 className="text-2xl font-bold">Store PNP Achievements</h1>
       </div>
       <div className="w-full">
-        <div className='flex w-full items-center justify-between mb-4 '>
+        <div className='flex flex-col justify-start items-start gap-2 sm:flex-row w-full sm:items-center sm:justify-between mb-4 '>
           <div className="flex items-center justify-end">
             <div className='flex items-center gap-2'>
               <h1 className="text-base  font-bold"> Month</h1>
@@ -388,7 +394,7 @@ const page = () => {
           </div>
           <div className="flex justify-start gap-2 items-center mb-2">
             <SearchBar handleSearch={handleSearch} placeHolder="Search by name or code" />
-            <Select value={type} onValueChange={(e) => setType(e)} >
+            <Select value={type} onValueChange={(e) => handleType(e)} >
               <SelectTrigger className="w-[150px] font-semibold shadow-sm" >
                 <SelectValue placeholder="Select a File" />
               </SelectTrigger>
@@ -458,6 +464,7 @@ const page = () => {
                               type='date'
                               value={startDate}
                               onChange={(e) => setStartDate(e.target.value)}
+                              className='bg-white'
                             />
                           </div>
                           <div className='flex items-center gap-2'>
@@ -466,6 +473,7 @@ const page = () => {
                               type='date'
                               value={endDate}
                               onChange={(e) => setEndDate(e.target.value)}
+                              className='bg-white'
                             />
                           </div>
                         </div>
@@ -473,8 +481,14 @@ const page = () => {
 
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Historical Target Achived</h5>
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Till Date Achived</h5>
                             <p className=" text-gray-700 text-xl font-medium">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item, item.cat_3), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</p>
+                            <div className='flex items-center justify-start font-medium gap-2 mt-2 text-green-500'>
+                              <h1>{numFor.format(Math.ceil(sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)))} <span className='text-slate-800'> out of  </span> 
+                              {numFor.format(Math.ceil(getTotalTargetUntilYesterday(item, item.cat_3)))}</h1> 
+                              {/* <p>|</p> */}
+                            </div>
+                           
                           </div>
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
 
