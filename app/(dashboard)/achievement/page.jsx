@@ -163,7 +163,7 @@ const page = () => {
     }
 
     const percentage = (achieved / target) * 100;
-    return Math.min(100, percentage); // Ensure the percentage does not exceed 100%
+    return percentage; // Ensure the percentage does not exceed 100%
   }
 
 
