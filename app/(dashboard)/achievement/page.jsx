@@ -516,7 +516,7 @@ const page = () => {
           </div>
 
           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
-            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Achived</h5>
+            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">achieved</h5>
             <p className=" text-gray-700 text-xl font-medium">{calculateAchievementPercentage(totalTarget, totalSales).toFixed(2) + "%"}</p>
           </div>
         </div>}
@@ -533,8 +533,8 @@ const page = () => {
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Category</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Total Target</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Total Target</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
+                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved</th>
+                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved %</th>
               </tr>
             </thead>
             <tbody className="divide-y text-sm divide-gray-200 bg-white">
@@ -584,7 +584,7 @@ const page = () => {
                         </div>
                         <div className='flex  justify-between p-4 gap-2 '>
                           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
-                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Till Date Achived</h5>
+                            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Till Date achieved</h5>
                             <p className=" text-gray-700 text-xl font-medium">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</p>
                             <div className='flex items-center justify-start font-medium gap-2 mt-2 text-green-500'>
                               <h1>{numFor.format(Math.ceil(sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)))} <span className='text-slate-800'> out of  </span>
@@ -628,8 +628,8 @@ const page = () => {
                             <tr className="bg-slate-700">
                               <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Date</th>
                               <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Target</th>
-                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived</th>
-                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Achived %</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved %</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-salte-50 font-medium">
