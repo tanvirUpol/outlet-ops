@@ -380,7 +380,7 @@ const page = () => {
         }
 
         const result = await response.json();
-        console.log(result);
+        // console.log(result);
         setData(result?.achData);
         setInvoiceData(result?.InvData);
         setTotalSales(calculateTotalSalesSum(result?.InvData))
@@ -455,7 +455,7 @@ const page = () => {
 
 
   return (
-    <div className="w-full p-4 mb-4">
+    <div className="w-full p-4 mb-4 overflow-x-scroll">
       <div className="flex items-center gap-2 mb-4 text-gray-800">
         <GrTrophy className="w-6 h-6" />
         <h1 className="text-2xl font-bold">Store PNP Achievements</h1>
@@ -476,7 +476,7 @@ const page = () => {
             <p className='font-medium'>Sales Data Updated Till: {yesterdayDate ? yesterdayDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "Loading..."}</p>
           </div>
           <div className="flex justify-start gap-2 items-center mb-2">
-            <SearchBar  handleSearch={handleSearch} placeHolder="Search by name or code" />
+            <SearchBar  handleSearch={handleSearch} placeHolder="Search by code" />
             <Select value={type} onValueChange={(e) => handleType(e)} >
               <SelectTrigger className="w-[150px] font-semibold shadow-sm" >
                 <SelectValue placeholder="Select a File" />
@@ -528,7 +528,7 @@ const page = () => {
 
 
         {sortedOutlets.length > 0 && (
-          <table className=" table-fixed w-[768px] md:w-full shadow-sm rounded border">
+          <table className=" table-auto w-[768px] md:w-full shadow-sm rounded border">
             <thead className="sticky top-0" >
               <tr className="bg-slate-800" >
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Outlet</th>
@@ -550,7 +550,7 @@ const page = () => {
                         <div>
                           {collapsedRows[index] ? <CiSquareMinus className="w-6 h-6" /> : <CiSquarePlus className="w-6 h-6" />}
                         </div>
-                        <p>{item.outlet_name}</p>
+                        <p className='whitespace-nowrap'>{item.outlet_name}</p>
                       </div>
                     </td>
                     {/* <td className="py-3 px-4 border-b">{item.month}</td> */}
