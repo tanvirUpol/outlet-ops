@@ -38,7 +38,7 @@ function flipDate(date) {
 
 function calculateTotalTargetSum(objArray, salesData) {
 
-  console.log(objArray, salesData);
+  // console.log(objArray, salesData);
 
   const dateObjects = salesData.map(item => {
     const [day, month, year] = item.date.split('-');
@@ -218,13 +218,13 @@ const page = () => {
 
   function calculateAchievementPercentage(target, achieved) {
     // console.log(target, achieved);
-    if (target <= 0) {
-      throw new Error("Target value must be greater than zero");
-    }
+    // if (target <= 0) {
+    //   throw new Error("Target value must be greater than zero");
+    // }
 
-    if (achieved < 0) {
-      throw new Error("Achieved value cannot be negative");
-    }
+    // if (achieved < 0) {
+    //   throw new Error("Achieved value cannot be negative");
+    // }
 
     const percentage = (achieved / target) * 100;
     return percentage; // Ensure the percentage does not exceed 100%
@@ -411,14 +411,14 @@ const page = () => {
 
 
   const handleType = (e) => {
-
+     console.log(searchTerm);
     if(e !== "all" ){
 
         const results = data.filter((outlet) =>
-        outlet.cat_3.toLowerCase() === e.toLowerCase()
+        outlet.cat_3.toLowerCase() === e.toLowerCase() && (searchTerm ? outlet.outlet_code.toLowerCase().includes(searchTerm): true)
       );
       const resultsInv = invoiceData.filter((outlet) =>
-        outlet.cat_3.toLowerCase() === e.toLowerCase()
+        outlet.cat_3.toLowerCase() === e.toLowerCase()  && (searchTerm ? outlet.outlet_code.toLowerCase().includes(searchTerm): true)
       );
       setTotalSales(calculateTotalSalesSum(resultsInv))
       setTotalTarget(calculateTotalTargetSum(results, resultsInv))
@@ -433,11 +433,14 @@ const page = () => {
 
   // || outlet.outlet_name.toLowerCase().includes(query.toLowerCase())
   const handleSearch = (query) => {
+    setSearchTerm(query)
+    setType("all")
     const results = data.filter((outlet) =>
-      outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) 
+      outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) && (type !== "all"? outlet.cat_3.toLowerCase() === type.toLowerCase() : true)
     );
     const resultsInv = invoiceData.filter((outlet) =>
-      outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) 
+      outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) && 
+      (type !== "all"? outlet.cat_3.toLowerCase() === type.toLowerCase() : true)
     );
 
     console.log(results);
@@ -470,10 +473,10 @@ const page = () => {
                 />
               </div>
             </div>
-            <p>{yesterdayDate ? yesterdayDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "Loading..."}</p>
+            <p className='font-medium'>Sales Data Updated Till: {yesterdayDate ? yesterdayDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "Loading..."}</p>
           </div>
           <div className="flex justify-start gap-2 items-center mb-2">
-            <SearchBar handleSearch={handleSearch} placeHolder="Search by name or code" />
+            <SearchBar  handleSearch={handleSearch} placeHolder="Search by name or code" />
             <Select value={type} onValueChange={(e) => handleType(e)} >
               <SelectTrigger className="w-[150px] font-semibold shadow-sm" >
                 <SelectValue placeholder="Select a File" />
@@ -516,7 +519,7 @@ const page = () => {
           </div>
 
           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
-            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">achieved</h5>
+            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Achieved</h5>
             <p className=" text-gray-700 text-xl font-medium">{calculateAchievementPercentage(totalTarget, totalSales).toFixed(2) + "%"}</p>
           </div>
         </div>}
