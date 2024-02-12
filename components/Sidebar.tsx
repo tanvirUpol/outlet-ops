@@ -21,6 +21,8 @@ import { usePathname } from 'next/navigation'
 // react auth
 import { useSession } from "next-auth/react"
 import { signOut } from 'next-auth/react';
+import { IoPersonSharp } from 'react-icons/io5';
+import { IoIosRibbon } from 'react-icons/io';
 
 const Sidebar = () => {
     const [isCollapsed, setCollapsed] = useState(true);
@@ -116,22 +118,36 @@ const Sidebar = () => {
                         }
 
                     </ul>
-  
-                    <ul className='space-y-5 pt-5 border-t border-gray-500'>
-                        <Link href={"/settings"} className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === "/settings" ? 'active' : ''}`}>
-                            <div className='p-2 bg-gray-900 rounded-full' >
-                                <CiSettings className='w-5 h-5 box-content' />
-                            </div>
-                            <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Settings</span>
-                        </Link>
-                        <li onClick={() => signOut()} className={`flex items-center cursor-pointer  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
-                            <div className='p-2 bg-gray-900 rounded-full' >
-                                <AiOutlineLogout className='w-5 h-5 box-content' />
-                            </div>
-                            <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Logout</span>
-                        </li>
+                    <div>
+                        {!isCollapsed && 
+                            <div className={`bg-[#334155] p-5  mb-3 rounded-md space-y-4 text-slate-200 text-nowrap`}>
+                            {/* <p className='flex items-center gap-2'>
+                                <span><IoPersonSharp /></span>
+                                <span>{session?.user?.role}</span>
+                                </p> */}
+                            <p className='flex items-center gap-2'>
+                                <span><IoIosRibbon /></span> 
+                                <span className='uppercase text-sm'>{session?.user?.role}</span>
+                                </p>
+                            {/* <p>Role: {user.role}</p> */}
+                            </div>}
 
-                    </ul>
+                        <ul className='space-y-5 pt-5 border-t border-gray-500'>
+                            <Link href={"/settings"} className={`flex items-center  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav ${pathname === "/settings" ? 'active' : ''}`}>
+                                <div className='p-2 bg-gray-900 rounded-full' >
+                                    <CiSettings className='w-5 h-5 box-content' />
+                                </div>
+                                <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Settings</span>
+                            </Link>
+                            <li onClick={() => signOut()} className={`flex items-center cursor-pointer  ${isCollapsed ? 'justify-center' : 'justify-start'} gap-3 hovernav`}>
+                                <div className='p-2 bg-gray-900 rounded-full' >
+                                    <AiOutlineLogout className='w-5 h-5 box-content' />
+                                </div>
+                                <span className={` ${isCollapsed ? 'hidden' : 'inline'}`}>Logout</span>
+                            </li>
+
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
