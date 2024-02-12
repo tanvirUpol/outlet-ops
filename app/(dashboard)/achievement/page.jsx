@@ -111,7 +111,7 @@ const page = () => {
   const [totalTarget, setTotalTarget] = useState(null);
   const [totalSales, setTotalSales] = useState(null);
   const [activeTab, setActiveTab] = useState('historical'); // Initial active tab
-
+  const [searchTerm,setSearchTerm] = useState("")
   const { data: session } = useSession()
 
 
@@ -507,7 +507,7 @@ const page = () => {
 
         {!loading && <div className='flex  justify-between p-4 gap-2 '>
           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
-            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Total Target</h5>
+            <h5 className="mb-2 text-base font-bold tracking-tight text-gray-900 ">Last Total Target</h5>
             <p className=" text-gray-700 text-xl font-medium">{numFor.format(Math.ceil(totalTarget))}</p>
           </div>
           <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 ">
