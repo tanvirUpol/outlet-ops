@@ -81,7 +81,7 @@ function calculateTotalTargetSum(objArray, salesData) {
 
 
 function calculateTotalSalesSum(objArray) {
-  console.log(objArray);
+  console.log({objArray});
   let totalSum = 0;
   for (let i = 0; i < objArray.length; i++) {
     totalSum += objArray[i].total_sales;

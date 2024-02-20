@@ -418,8 +418,15 @@ const ExcelUploader = () => {
         if (data.length > 0) {
             console.log(data);
             setLoading(true)
-            // http://localhost:4000/api/keyArticle
+            // http://localhost:4001/api/keyArticle
             try {
+                // const res = await fetch("http://localhost:4000/api/keyArticle", {
+                //     method: "POST",
+                //     headers: {
+                //         "Content-type": "application/json"
+                //     },
+                //     body: JSON.stringify(data)
+                // })
                 const res = await fetch(selectedOpt.selectedPath, {
                     method: "POST",
                     headers: {

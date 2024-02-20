@@ -23,8 +23,14 @@ export async function GET(req, { params } ) {
             InvData = await InvoiceModel.find({ month , outlet_code:{ $in: token?.outlets} }).lean();
             achData = await AchievementModel.find({ month, outlet_code:{ $in: token?.outlets} }).lean();
         }else{
-            InvData = await InvoiceModel.find({ month }).lean();
+            
+
             achData = await AchievementModel.find({ month }).lean();
+            // Extract outlet codes from fetched data
+            const outletCodesArray = achData.map(data => data.outlet_code);
+            // console.log(outletCodesArray);
+
+            InvData = await InvoiceModel.find({ month, outlet_code: { $in: outletCodesArray } }).lean();
         }
 
         // console.log();
