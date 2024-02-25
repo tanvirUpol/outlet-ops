@@ -26,7 +26,12 @@ const UserSchema = new mongoose.Schema(  {
       type: String,
       default: ""
       // require: true
+    },
+    lastActive: {
+      type: Date,
+      // default: ""
     }
+
   },);
 
 const UserSchemaModel = models.User || mongoose.model('User', UserSchema);

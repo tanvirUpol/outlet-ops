@@ -21,12 +21,6 @@ import SearchBar from '@/components/SearchBar';
 import { useSession } from 'next-auth/react';
 import { CgSpinnerTwo } from "react-icons/cg";
 
-// const formatMonth = (date) => {
-//   const year = date.getFullYear();
-//   const month = date.getMonth() + 1; // Note: getMonth() returns 0-based index
-//   return `${year}-${month}`;
-// };
-
 
 // total card functions
 function flipDate(date) {
@@ -48,19 +42,6 @@ function calculateTotalTargetSum(objArray, salesData) {
 
   const lastUpdated =new Date( Math.max(...dateObjects));
 
-  // let totalSum = 0;
-
-  // for (let i = 0; i < objArray.length; i++) {
-  //   let targetDate = new Date(flipDate(objArray[i].achievement_target[0].date));
-  //   if (targetDate <= lastUpdated){
-  //     console.log(targetDate , lastUpdated);
-  //     totalSum += objArray[i].total_target;
-  //   }
-  // }
-
-
-
-  // console.log(totalSum);
 
   let totalTargetUntilYesterday = 0;
   for (let i = 0; i < objArray.length; i++) {
@@ -113,6 +94,25 @@ const page = () => {
   const [activeTab, setActiveTab] = useState('historical'); // Initial active tab
   const [searchTerm,setSearchTerm] = useState("")
   const { data: session } = useSession()
+
+  const [sortType, setSortType] = useState("sales")
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortBy, setSortBy] = useState("desc");
+
+
+  const toggleSort = (column) => {
+    setCollapsedRows([])
+    // console.log(column);
+    if (column === sortBy) {
+      // If the same column is clicked, toggle the sorting direction
+      // console.log(column);
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // If a new column is clicked, set it as the sorting column and default to ascending order
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
 
 
   useEffect(() => {
@@ -431,11 +431,20 @@ const page = () => {
     setType(e)
   }
 
+
+  const updatedData = data.map((item)=> {
+    return {
+      ...item,
+      achieved: sumTotalSales(item.outlet_code, item.cat_3),
+      achieved_percent: calculateAchievementPercentage(getTotalTargetUntilYesterday(item), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3))
+    }
+  })
+
   // || outlet.outlet_name.toLowerCase().includes(query.toLowerCase())
   const handleSearch = (query) => {
     setSearchTerm(query)
     setType("all")
-    const results = data.filter((outlet) =>
+    const results = updatedData.filter((outlet) =>
       outlet.outlet_code.toLowerCase().includes(query.toLowerCase()) && (type !== "all"? outlet.cat_3.toLowerCase() === type.toLowerCase() : true)
     );
     const resultsInv = invoiceData.filter((outlet) =>
@@ -443,13 +452,21 @@ const page = () => {
       (type !== "all"? outlet.cat_3.toLowerCase() === type.toLowerCase() : true)
     );
 
-    console.log(results);
+    // console.log(results);
     setSearchResults(results);
     setTotalSales(calculateTotalSalesSum(resultsInv))
     setTotalTarget(calculateTotalTargetSum(results, resultsInv))
   };
 
-  const sortedOutlets = (searchResults.length > 0 ? searchResults : data)
+  const sortedOutlets = (searchResults.length > 0 ? searchResults : updatedData)?.slice().sort((a, b) => {
+    const aValue = parseFloat(a[sortBy]);
+    const bValue = parseFloat(b[sortBy]);
+    if (sortOrder === "asc") {
+      return aValue - bValue;
+    } else {
+      return bValue - aValue;
+    }
+  });
 
   // console.log(session?.user);
 
@@ -536,15 +553,18 @@ const page = () => {
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Category</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Total Target</th>
                 <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Total Target</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved</th>
-                <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved %</th>
+                <th onClick={() => toggleSort("achieved")} className="px-4 py-4 cursor-pointer text-left text-xs font-medium uppercase tracking-wider text-white">achieved {sortBy === `achieved` &&
+                (sortOrder === "asc" ? "▲" : "▼")}</th>
+                <th onClick={() => toggleSort("achieved_percent")} className="px-4 py-4 cursor-pointer text-left text-xs font-medium uppercase tracking-wider text-white">achieved % {sortBy === `achieved_percent` &&
+                (sortOrder === "asc" ? "▲" : "▼")}</th>
               </tr>
             </thead>
             <tbody className="divide-y text-sm divide-gray-200 bg-white">
               {sortedOutlets?.map((item, index) => (
                 <React.Fragment key={index}>
                   {/* {console.log(item.cat_3.toLowerCase())} */}
-                  {(session?.user?.outlets.includes(item.outlet_code) || session?.user?.outlets.length === 0) && (item?.cat_3.toLowerCase() == type || type === "all") && <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
+                  {(session?.user?.outlets.includes(item.outlet_code) || session?.user?.outlets.length === 0) && (item?.cat_3.toLowerCase() == type || type === "all") && 
+                  <tr className="hover:bg-gray-100 cursor-pointer" onClick={() => toggleRow(index)}>
                     <td className="py-3 px-4 border-b">
                       <div className='flex items-center justify-start gap-2'>
                         <div>
@@ -557,9 +577,10 @@ const page = () => {
                     <td className="py-3 px-4 border-b">{item.cat_3}</td>
                     <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(item.total_target)))}</td>
                     <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(getTotalTargetUntilYesterday(item, item.cat_3)))}</td>
-                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(sumTotalSales(item.outlet_code, item.cat_3)))}</td>
-                    {/* <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(item.total_target), sumTotalSales(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td> */}
-                    <td className="py-3 px-4 border-b">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td>
+                    {/* <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(sumTotalSales(item.outlet_code, item.cat_3)))}</td>
+                    <td className="py-3 px-4 border-b">{calculateAchievementPercentage(getTotalTargetUntilYesterday(item), sumTotalSalesTillYesterday(item.outlet_code, item.cat_3)).toFixed(2) + "%"}</td> */}
+                    <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(item.achieved))}</td>
+                    <td className="py-3 px-4 border-b">{item.achieved_percent.toFixed(2) + "%"}</td>
                   </tr>}
                   {collapsedRows[index] && (
                     <tr className={`${collapsedRows[index] ? "activeDropdown" : ""}`}>

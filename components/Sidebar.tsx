@@ -11,6 +11,7 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { FiUploadCloud } from "react-icons/fi";
 import { GrTrophy } from "react-icons/gr";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
+import { FaUserClock } from "react-icons/fa";
 import { RiMapPinLine } from "react-icons/ri";
 import Image from 'next/image';
 
@@ -69,6 +70,12 @@ const Sidebar = () => {
             icon: GrTrophy,
             path: "/achievement",
             access: ["admin", "pnp admin", "pnp user"]
+        },
+        {
+            text: "Active Users",
+            icon: FaUserClock,
+            path: "/userstatus",
+            access: ["admin", "pnp admin"]
         },
     ]
 

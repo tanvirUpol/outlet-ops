@@ -45,4 +45,4 @@ export default withAuth(
 )
 
 
-export const config = { matcher: ["/settings", "/dashboard", "/target", "/map", "/upload", "/outlet/:id*", "/achievement"] }
+export const config = { matcher: ["/settings", "/dashboard", "/target", "/map", "/upload", "/outlet/:id*", "/achievement", "/userstatus"] }

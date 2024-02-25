@@ -3,14 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 import AchievementModel from "@/models/PnpAchivement"
 import InvoiceModel from "@/models/InvoiceModel"
 import { getToken } from "next-auth/jwt"
+import UserSchemaModel from "@/models/userModel";
+
+
 
 
 export async function GET(req, { params } ) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    console.log(token);
+    // console.log(token);
     try {
-        console.log(params);
+        // console.log(params);
         const { month  } = params;
         await connectMongoDB();
 
@@ -19,12 +22,13 @@ export async function GET(req, { params } ) {
 
         
         if(token?.outlets?.length > 0){
-            console.log("asas");
+            // console.log("asas");
+            const user = await UserSchemaModel.findOneAndUpdate({email: token.email}, { lastActive: (new Date())} , {new: true})
             InvData = await InvoiceModel.find({ month , outlet_code:{ $in: token?.outlets} }).lean();
             achData = await AchievementModel.find({ month, outlet_code:{ $in: token?.outlets} }).lean();
         }else{
             
-
+            const user = await UserSchemaModel.findOneAndUpdate({email: token.email}, { lastActive: (new Date())} , {new: true})
             achData = await AchievementModel.find({ month }).lean();
             // Extract outlet codes from fetched data
             const outletCodesArray = achData.map(data => data.outlet_code);
