@@ -11,7 +11,7 @@ const page = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     function formatDateTime(date) {
-        console.log(date);
+        // console.log(date);
         if (date == "Invalid Date") {
             return "No Acticity"
         }
@@ -37,6 +37,7 @@ const page = () => {
             try {
                 const response = await fetch('/api/user/');
                 const jsonData = await response.json();
+                console.log(jsonData);
                 setData(jsonData);
                 setFilteredData(jsonData); // Initially set filtered data to all data
                 const uniqueRoles = [...new Set(jsonData.map(user => user.role))]; // Extract unique roles
@@ -113,6 +114,7 @@ const page = () => {
                         <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Name</th>
                         <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Role</th>
                         <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Last Active</th>
+                        <th className="px-4 py-4 text-left text-xs font-medium uppercase tracking-wider text-white">Count</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y text-sm divide-gray-200 bg-white">
@@ -131,6 +133,7 @@ const page = () => {
                                 <td className="py-3 px-6 text-left">{user.name}</td>
                                 <td className="py-3 px-6 text-left whitespace-nowrap">{(user.role)}</td>
                                 <td className="py-3 px-6 text-left whitespace-nowrap">{formatDateTime(new Date(user.lastActive))}</td>
+                                <td className="py-3 px-6 text-left whitespace-nowrap">{(user.activityCount)}</td>
                             </tr>
                         ))}
                 </tbody>

@@ -30,6 +30,10 @@ const UserSchema = new mongoose.Schema(  {
     lastActive: {
       type: Date,
       // default: ""
+    },
+    activityCount: {
+      type: Number,
+      default: 0
     }
 
   },);
