@@ -13,7 +13,6 @@ export async function POST(req) {
            
             await InvoiceModel.deleteMany({date: dataArray[0].date})
             await InvoiceModel.insertMany(dataArray);
-            
             return NextResponse.json({message: "Data Submitted"}, {status: 201})
         } catch (error) {
             console.error('Error creating or updating data array:', error);

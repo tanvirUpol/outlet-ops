@@ -182,14 +182,15 @@ const page = () => {
   function getTodaysTarget(data) {
     const today = new Date();
     const formattedToday = formatDate(today);
-    return getTargetByDate(data, formattedToday).toFixed(2);
+    return getTargetByDate(data, formattedToday);
   }
 
   function getTomorrowsTarget(data) {
+    console.log(data);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const formattedTomorrow = formatDate(tomorrow);
-    return getTargetByDate(data, formattedTomorrow).toFixed(2);
+    return getTargetByDate(data, formattedTomorrow);
   }
 
   function formatDate(date) {
