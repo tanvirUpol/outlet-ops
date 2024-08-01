@@ -139,6 +139,12 @@ const page = () => {
 
 
 
+  const InsentiveRation = {
+
+  }
+
+
+
 
 
   const handleTabClick = (tab) => {
@@ -363,6 +369,7 @@ const page = () => {
   // }
   useEffect(() => {
     const fetchData = async () => {
+      console.log("fetching data");
       setLoading(true)
       try {
         // Format the selected month to match your backend expectations
@@ -375,13 +382,15 @@ const page = () => {
 
         const response = await fetch(`/api/achivement/${formattedDate}`);
 
+        console.log(response);
+
         if (!response.ok) {
           setLoading(false)
           throw new Error('Failed to fetch data');
         }
 
         const result = await response.json();
-        // console.log(result);
+        console.log({result});
         setData(result?.achData);
         setInvoiceData(result?.InvData);
         setTotalSales(calculateTotalSalesSum(result?.InvData))
@@ -468,6 +477,45 @@ const page = () => {
       return bValue - aValue;
     }
   });
+
+  
+
+
+  const percentageValues = {
+    "95": 0.00183461,
+    "96": 0.00271114,
+    "97": 0.00374529,
+    "98": 0.00493222,
+    "99": 0.00626732,
+    "100": 0.00774612
+}
+
+
+function calculateSales(percentage, target) {
+  console.log(percentage,target);
+  let multiplier = 0;
+  let insPercentage = Math.floor(percentage/100)
+
+  if (percentage >= 95 && percentage < 96) {
+      multiplier = percentageValues["95"];
+  } else if (percentage >= 96 && percentage < 97) {
+      multiplier = percentageValues["96"];
+  } else if (percentage >= 97 && percentage < 98) {
+      multiplier = percentageValues["97"];
+  } else if (percentage >= 98 && percentage < 99) {
+      multiplier = percentageValues["98"];
+  } else if (percentage >= 99 && percentage < 100) {
+      multiplier = percentageValues["99"];
+  } else if (percentage >= 100) {
+      multiplier = percentageValues["100"];
+  }
+
+  if(multiplier !== 0){
+    console.log({insPercentage ,target, multiplier});
+  }
+
+  return (target * insPercentage ) * multiplier;
+}
 
   // console.log(session?.user);
 
@@ -655,6 +703,7 @@ const page = () => {
                               <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Target</th>
                               <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved</th>
                               <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">achieved %</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium uppercase tracking-wider text-white">Ins</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-salte-50 font-medium">
@@ -665,12 +714,28 @@ const page = () => {
                                   <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
                                   <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
                                   <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
+
+                                  <td className="py-3 px-4 border-b">{calculateSales(calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))),Math.ceil(parseFloat(target.target)) ) }</td>
                                 </tr>}
-                                {activeTab === 'future' && !getBreakingPoint(target.date) && checkStartDate(target.date) && checkEndDate(target.date) && <tr>
+
+
+
+                                {activeTab === 'future' && !getBreakingPoint(target.date) && checkStartDate(target.date) && checkEndDate(target.date) && 
+                                <tr>
+
                                   <td className="py-3 px-4 border-b">{new Date(flipDate(target.date)).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}</td>
+
+
                                   <td className="py-3 px-4 border-b">{numFor.format(Math.ceil(parseFloat(target.target)))}</td>
+
+
                                   <td className="py-3 px-4 border-b">{numFor.format(Math.ceil((parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date)))))}</td>
+
+
                                   <td className="py-3 px-4 border-b">{calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))).toFixed(2) + "%"}</td>
+
+
+                                  <td className="py-3 px-4 border-b">{calculateSales(calculateAchievementPercentage(parseFloat(target.target), parseFloat(findTotalSales(item.outlet_code, item.cat_3, target.date))),Math.ceil(parseFloat(target.target)) ) }</td>
                                 </tr>}
                               </React.Fragment>
                             ))}

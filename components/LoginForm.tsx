@@ -22,7 +22,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-
+    setLoading(true)
     if (!email || !password) {
       setError("All fields are necessary!")
       return
@@ -48,6 +48,8 @@ const LoginForm = () => {
     } catch (error) {
       setLoading(false)
     }
+
+    setLoading(false)
 
 
     // try {
