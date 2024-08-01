@@ -106,9 +106,9 @@ const StoreLevelTable: React.FC<Props> = ({ data }) => {
               <tr className=" text-xs transition-colors hover:bg-cyan-100 sm:text-sm" key={item._id}>
                 {/* <td className="py-2 px-4 border-b">{item.outlet_code}</td> */}
                 <td className="py-3 px-4 border-b max-w-[100px]">
-                  <Link className="cursor-pointer  underline underline-offset-2" href={`/outlet/${item.outlet_code}`}>
+                  <p className="cursor-pointer  underline underline-offset-2">
                     {item.outlet_name}
-                  </Link>
+                  </p>
                 </td>
                 <td className="py-3 px-4 border-b">{numFor.format((parseFloat(item[type + "_this"])))}</td>
                 <td className="py-3 px-4 border-b">{numFor.format(parseFloat(item[type + "_last"]))}</td>
