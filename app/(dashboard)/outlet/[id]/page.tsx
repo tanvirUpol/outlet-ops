@@ -2,44 +2,44 @@ import OutletInfo from "@/components/OutletInfo";
 import { notFound } from "next/navigation";
 
 
-export async function generateStaticParams() {
-    const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel")
-    const data = await res.json()
+// export async function generateStaticParams() {
+//     const res = await fetch(process.env.NEXTAUTH_URL + "/api/storeLevel")
+//     const data = await res.json()
 
-    return data.map((item: any) => (
-        {
-            id: item.outlet_code
-        }
-    ))
-}
+//     return data.map((item: any) => (
+//         {
+//             id: item.outlet_code
+//         }
+//     ))
+// }
 
-async function getData(id: string) {
+// async function getData(id: string) {
 
-    console.log(id);
+//     console.log(id);
 
-    const res = await fetch(process.env.NEXTAUTH_URL + `/api/catLevel/${id.toUpperCase()}`, {
-        next: {
-            revalidate: 60
-        }
-    })
+//     const res = await fetch(process.env.NEXTAUTH_URL + `/api/catLevel/${id.toUpperCase()}`, {
+//         next: {
+//             revalidate: 60
+//         }
+//     })
 
-    if (!res.ok) {
-        notFound()
-    }
+//     if (!res.ok) {
+//         notFound()
+//     }
 
-    return res.json()
-}
+//     return res.json()
+// }
 
 
 const page = async ({ params }: { params: { id: string } }) => {
-    const { id } = params
-    const data = await getData(id)
+    // const { id } = params
+    // const data = await getData(id)
     // const { outletData, benchOutletData } = await getData(id)
 
     return (<>
-
+        <p>Not Avaialble</p>
         {/* {<OutletInfo   outletData={outletData} benchOutletData={benchOutletData} />} */}
-        {<OutletInfo data={data}  />}
+        {/* {<OutletInfo data={data}  />} */}
 
     </>
     )
